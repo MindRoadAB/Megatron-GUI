@@ -40,7 +40,6 @@ const Datatable = ({data, onDelete, onEdit}) => {
                     </td>
                 </tr>)
                 }
-                
             </tbody>
         </table>
     )

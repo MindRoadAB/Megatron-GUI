@@ -1,2 +1,11 @@
 # Megatron-GUI
-A GUI for megatron
+
+### Install
+
+```npm install```
+
+### Run
+
+```npm run server```
+
+```npm run start```

@@ -1,5 +1,4 @@
-import React from 'react'
-import Button from '../Button'
+import {Table, Button} from 'react-bootstrap'
 
 
 // The code for the structure of the table
@@ -21,7 +20,7 @@ const camelToSentence = (s) =>{
 const Datatable = ({data, onDelete, onEdit}) => {
     const columns = data[0] && Object.keys(data[0]);
     return (
-        <table cellPadding={0} cellSpacing={0}>
+        <Table striped bordered hover size="sm">
             <thead>
                 <tr>
                  {data[0] && columns.map(heading => <th>{camelToSentence(heading)}</th>)} 
@@ -35,13 +34,13 @@ const Datatable = ({data, onDelete, onEdit}) => {
                         columns.map(column => <td>{row[column]}</td>)
                     }
                     <td>
-                        <Button text={'Edit'} color={'steelblue'} onClick={() => onEdit(row.id)}/>
-                        <Button text={'Delete'}  color={'red'} onClick={() => onDelete(row.id)}/>
+                        <Button className="m-1" variant='primary' onClick={() => onEdit(row.id)}>Edit</Button>
+                        <Button variant='danger' onClick={() => onDelete(row.id)}>Delete</Button>
                     </td>
                 </tr>)
                 }
             </tbody>
-        </table>
+        </Table>
     )
 }
 

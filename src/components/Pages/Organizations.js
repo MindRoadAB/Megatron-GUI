@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react';
 import Datatable from '../Datatable/Datatable';
 import AddOrganization from '../AddOrganization';
-import Button from '../Button';
 import EditModal from '../EditModal';
+import {Button} from 'react-bootstrap'
 
 const Organizations = () => {     
 
@@ -154,9 +154,13 @@ const Organizations = () => {
        <div className='app-container'>
            <h1>Organizations</h1>
            <div>
-               <Button text={showAddOrg ? 'Close' : 'Add org'} 
-                    color={showAddOrg ? 'red' : 'green'}
-                    onClick={() => setShowAddOrg(!showAddOrg)}/>
+               <Button variant={showAddOrg ? 'danger' : 'success'}
+                    onClick={() => setShowAddOrg(!showAddOrg)}>
+                        {showAddOrg ? 'Close' : 'Add org'} 
+                </Button>
+
+
+
                <input type='text' 
                     placeholder='Filter table...' 
                     className='filter-input'

@@ -12,7 +12,7 @@ const camelToSentence = (s) =>{
     else if(s === 'IPRanges')
         return 'IP Ranges';
 
-    let res = s.replace(/([A-Z])/g, " $1");
+    let res = s.replace(/([A-Z])/g, ' $1');
     res = res.charAt(0).toUpperCase() + res.slice(1);
     return res;
 }
@@ -20,7 +20,7 @@ const camelToSentence = (s) =>{
 const Datatable = ({data, onDelete, onEdit}) => {
     const columns = data[0] && Object.keys(data[0]);
     return (
-        <Table striped bordered hover size="sm">
+        <Table striped bordered hover size='sm'>
             <thead>
                 <tr>
                  {data[0] && columns.map(heading => <th>{camelToSentence(heading)}</th>)} 
@@ -34,7 +34,7 @@ const Datatable = ({data, onDelete, onEdit}) => {
                         columns.map(column => <td>{row[column]}</td>)
                     }
                     <td>
-                        <Button className="m-1" variant='primary' onClick={() => onEdit(row.id)}>Edit</Button>
+                        <Button className='m-1' variant='primary' onClick={() => onEdit(row.id)}>Edit</Button>
                         <Button variant='danger' onClick={() => onDelete(row.id)}>Delete</Button>
                     </td>
                 </tr>)

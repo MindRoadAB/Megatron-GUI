@@ -142,7 +142,7 @@ const Organizations = () => {
         else if(s === 'IPRanges')
             return 'IP Ranges';
 
-        let res = s.replace(/([A-Z])/g, " $1");
+        let res = s.replace(/([A-Z])/g, ' $1');
         res = res.charAt(0).toUpperCase() + res.slice(1);
         return res;
     }
@@ -154,12 +154,11 @@ const Organizations = () => {
        <div className='app-container'>
            <h1>Organizations</h1>
            <div>
-               <Button variant={showAddOrg ? 'danger' : 'success'}
+               <Button className='m-1'
+                    variant={showAddOrg ? 'danger' : 'success'}
                     onClick={() => setShowAddOrg(!showAddOrg)}>
                         {showAddOrg ? 'Close' : 'Add org'} 
                 </Button>
-
-
 
                <input type='text' 
                     placeholder='Filter table...' 
@@ -167,7 +166,7 @@ const Organizations = () => {
                     value={query} onChange={(e) => setQuery(e.target.value)}/>
                {
                    columns && columns.map(column => <label>
-                       <input type="checkbox" checked={searchColumns.includes(column)}
+                       <input type='checkbox' checked={searchColumns.includes(column)}
                        onChange={(e) => {
                            const checked = searchColumns.includes(column);
                            setSearchColumns(prev => checked 

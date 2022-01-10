@@ -5,20 +5,20 @@ export const Navbar = () => {
     return (
         <>
             <Nav>
-                <NavLink to="/">
+                <NavLink to='/'>
                     <h1>Megatron</h1>
                 </NavLink>
                 <NavMenu>
-                    <NavLink NavLink to="/organizations">
+                    <NavLink NavLink to='/organizations'>
                         Organizations
                     </NavLink>
-                    <NavLink to="/contacts"> 
+                    <NavLink to='/contacts'> 
                         Contacts
                     </NavLink>
-                    <NavLink to="/log-entries"> 
+                    <NavLink to='/log-entries'> 
                         Log Entries
                     </NavLink>
-                    <NavLink to="/something">
+                    <NavLink to='/something'>
                         Something
                     </NavLink>
                 </NavMenu>

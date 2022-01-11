@@ -18,4 +18,4 @@
 
 ### Run
 
-```FLASK_ENV=development FLASK_APP=api/api.py flask run```
+```npm run api```

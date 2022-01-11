@@ -73,7 +73,7 @@ const AddOrganization = ({onAdd}) => {
                     <Form.Group className='mb-2'>
                         <Form.Label>Prio:</Form.Label>
                         <Form.Select onChange={(e) => setPrio(e.target.value) }>
-                            <option>{prio}</option>
+                            <option></option>
                             <option value='Organization Category 1 [95]'>Organization Category 1 [95]</option>
                             <option value='Organization Category 2 [90]'>Organization Category 2 [90]</option>
                             <option value='Organization Category 3 [80]'>Organization Category 3 [80]</option>

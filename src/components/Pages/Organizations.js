@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import Datatable from '../Datatable/Datatable';
 import AddOrganization from '../AddOrganization';
 import EditModal from '../EditModal';
-import {Button} from 'react-bootstrap'
+import {Button, Form} from 'react-bootstrap'
 
 const Organizations = () => {     
 
@@ -154,32 +154,38 @@ const Organizations = () => {
        <div className='app-container'>
            <h1>Organizations</h1>
            <div>
-               <Button className='m-1'
-                    variant={showAddOrg ? 'danger' : 'success'}
-                    onClick={() => setShowAddOrg(!showAddOrg)}>
-                        {showAddOrg ? 'Close' : 'Add org'} 
+                <Button className='m-1'
+                        variant={showAddOrg ? 'danger' : 'success'}
+                        onClick={() => setShowAddOrg(!showAddOrg)}>
+                            {showAddOrg ? 'Close' : 'Add org'} 
                 </Button>
-
-               <input type='text' 
-                    placeholder='Filter table...' 
-                    className='filter-input'
-                    value={query} onChange={(e) => setQuery(e.target.value)}/>
-               {
-                   columns && columns.map(column => <label>
-                       <input type='checkbox' checked={searchColumns.includes(column)}
-                       onChange={(e) => {
-                           const checked = searchColumns.includes(column);
-                           setSearchColumns(prev => checked 
-                            ? prev.filter(sc => sc !== column)
-                            : [...prev, column])
-                       }}/>
-                       {camelToSentence(column)}
-                   </label>)
-               }
            </div>
-           <div>
+           
+            <div>
                {showAddOrg && <AddOrganization onAdd={addOrganization}/>}
             </div>
+           <div>
+               {
+                   columns && columns.map(column => 
+                       <Form.Check className='m-1' 
+                            checked={searchColumns.includes(column)}
+                            onChange={(e) => {
+                                const checked = searchColumns.includes(column);
+                                setSearchColumns(prev => checked 
+                                 ? prev.filter(sc => sc !== column)
+                                 : [...prev, column])}}
+                            label={camelToSentence(column)}
+                            inline
+                       />
+                   )
+               }
+               <Form.Control
+                    type="text"
+                    placeholder='Filter table...'
+                    className='filter-input'
+                    value={query} onChange={(e) => setQuery(e.target.value)}/>
+                    
+           </div>
            <div>
                 {showEditOrg && 
                     <EditModal onCloseClick={() => setShowEditOrg(false)} 

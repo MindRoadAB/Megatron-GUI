@@ -81,19 +81,19 @@
       "id": 8
     },
     {
-      "name": "Solar Bora AB",
-      "regNo": "2",
-      "IPRanges": "143.432.543-754.123.432",
+      "name": "SolarBora",
+      "regNo": "12",
+      "IPRanges": "123.321.545-654.852.364",
       "domains": "solarbora.se",
-      "ASN": "321",
-      "prio": "Organization Category 1 [95]",
+      "ASN": "123",
+      "prio": "Organization Category 3 [80]",
       "countryCode": "SE",
       "languageCode": "sv",
       "status": "",
-      "description": "I don't work here",
-      "created": "2022-1-5",
-      "lastModified": "2022-1-5",
-      "comments": "But I made their webpage",
+      "description": "Hello",
+      "created": "2022-1-11",
+      "lastModified": "2022-1-11",
+      "comments": "",
       "id": 9
     }
   ],

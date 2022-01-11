@@ -17,58 +17,8 @@ button, input[type=submit]{
   display: inline-block !important;
 }
 
-input[type=text], textarea, select{
-  width: 20rem;
-  padding: 5px 7px;
-  margin: 2px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-}
-
-label{
-  font-weight: bold;
-}
 
 :root {
     font-size: 14px;
   }
   
-  .thead,
-  tr {
-    background-color: honeydew;
-  }
-  
-  .tr,
-  th {
-    white-space: nowrap;
-    padding: 1rem;
-    text-align: left;
-    background-color: honeydew;
-  }
-  
-  tbody,
-  tr:nth-child(odd) {
-    background-color: white;
-  }
-  
-  .tbody,
-  tr,
-  td {
-    white-space: nowrap;
-    width: 20%;
-    overflow-wrap: break-word;
-    padding: 0.5rem;
-  }
-  table, th, td {
-    border: 1px solid lightgray;
-    border-collapse: collapse;
-  }
-
-  th{
-    border-bottom: 2px solid lightgray;
-  }
-
-  table{
-    border: 1px solid black;
-  }

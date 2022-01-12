@@ -37,8 +37,16 @@ const AddOrganization = ({onAdd, visible, onClose}) => {
 
         onAdd({auto_update_match_fields, name, registration_no, prio_id, country_code, 
             language_code, description, enabled, created, last_modified, modified_by, comment });
-        
+        clearForm();
         onClose();
+    }
+
+    const clearForm = () =>{
+        setName('');
+        setRegistrationNumber('');
+        setCountryCode('SE');
+        setLanguageCode('sv');
+        setDescirtpion('');
     }
 
     return (

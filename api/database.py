@@ -117,10 +117,8 @@ def row2dict(row):
 @thread_scoped_session
 def add_organization(org_data):
     if 'id' in org_data:
-        org_id = org_data['id']
-        update_row(Organization, org_data)
-    else:
-        org_id = insert_row(Organization, org_data)
+        del org_data['id']
+    org_id = insert_row(Organization, org_data)
     Session.commit()
     return get_organization(org_id)
 

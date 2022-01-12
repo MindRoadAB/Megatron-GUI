@@ -1,6 +1,7 @@
 import {Table, Button, ButtonGroup } from "react-bootstrap"
 import {Link} from 'react-router-dom'
-const OrganizationList = ({data, remove}) => {
+
+const OrganizationTable = ({data, remove}) => {
 
     return (
         <div>
@@ -47,4 +48,4 @@ const OrganizationList = ({data, remove}) => {
 }
 
 
-export default OrganizationList
+export default OrganizationTable

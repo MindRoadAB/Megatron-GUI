@@ -1,9 +1,14 @@
 import {useState, useEffect} from 'react';
 import AddOrganization from '../AddOrganization';
-import OrganizationList from '../OrganizationList';
+import OrganizationTable from '../OrganizationTable';
 import {Button, Form, Container} from 'react-bootstrap'
 
 const Organizations = () => {     
+    const [showAddOrg, setShowAddOrg] = useState(false);
+
+    const handleClose = () => setShowAddOrg(false);
+    const handleShow = () => setShowAddOrg(true);
+
 
     // Sets the default data state and then calls setData when we change it
     const [data, setData] = useState([]);
@@ -15,7 +20,6 @@ const Organizations = () => {
     // Is then changed when the checkboxes change
     const [searchColumns, setSearchColumns] = useState(['id', 'name']);
 
-    const[showAddOrg, setShowAddOrg] = useState(false);
 
     // Gets the data when page is loaded and sets the data state
     useEffect(() => {
@@ -36,44 +40,61 @@ const Organizations = () => {
 
     // API call to add an org, maybe should be in different file?
     const addOrganization = async (org) => {
+        try{
+            const res = await fetch('/organization',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(org)
+            });
+            
+            const newData = await res.json();
 
-        const res = await fetch('/organization',
-        {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(org)
-        });
-        
-        const newData = await res.json();
+            setData([...data, newData.organization]);
+        } catch(error){
+            alert('Could not create new organization');
+        }
+    }
 
-        setData([...data, newData]);
+    const deleteOrganization = async (id) => {
+        try{
+            await fetch('/organization/' + id,
+            {
+                method: 'DELETE'
+            });
+
+            setData(data.filter((org) => org.id !== id));
+        } catch(error){
+            alert('Could not delete organization');
+        }
     }
 
 
     // Filter the data based on if the columns match the input from the text box (query)
     const search = (rows) =>{
+        console.log(data);
         return rows.filter(
             (row) => 
                 searchColumns.some((column) => row[column].toString().toLowerCase().indexOf(query.toLowerCase()) > -1)
             );
     }
 
-
     return (
        <Container className='mt-5'>
            <h1>Organizations</h1>
            <div>
                 <Button className='mb-3'
-                        variant={showAddOrg ? 'danger' : 'success'}
-                        onClick={() => setShowAddOrg(!showAddOrg)}>
-                            {showAddOrg ? 'Close' : 'Add org'} 
+                        variant ='success'
+                        onClick={handleShow}
+                >
+                    Add organization
                 </Button>
            </div>
            
             <div>
-               {showAddOrg && <AddOrganization onAdd={addOrganization}/>}
+               <AddOrganization onAdd={addOrganization} visible={showAddOrg} onClose={handleClose}/>
             </div>
            <div>
                <Form.Control
@@ -84,7 +105,7 @@ const Organizations = () => {
                     
            </div>
            <div>
-               <OrganizationList data={search(data)}/>
+               <OrganizationTable data={search(data)} remove={deleteOrganization}/>
            </div>
             
        </Container>

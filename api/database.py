@@ -192,3 +192,14 @@ def delete_organization(org_id):
     except:
         Session.rollback()
         raise Exception('delete error')
+
+
+@thread_scoped_session
+def dump_table(table_name):
+    table_rows = None
+    for table in [ASN, Contact, DomainName, IpRange, Organization]:
+        if table_name == table.__tablename__:
+            table_rows = []
+            for row in Session.query(table).order_by(table.id).all():
+                table_rows.append(row2dict(row))
+    return table_rows

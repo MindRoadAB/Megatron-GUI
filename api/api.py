@@ -21,3 +21,8 @@ def get_organization(org_id):
     elif request.method == 'DELETE':
         database.delete_organization(org_id)
         return jsonify(success=True)
+
+
+@app.route("/table/<table_name>", methods = ['GET'])
+def dump_table(table_name):
+    return jsonify(database.dump_table(table_name))

@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, insert, update, delete
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 import pathlib
 import configparser
 
@@ -22,6 +22,7 @@ def get_connection_string():
 
 engine = create_engine(get_connection_string(), echo=False)
 Base = declarative_base(engine)
+Session = scoped_session(sessionmaker(bind=engine))
 
 
 class Organization(Base):
@@ -49,13 +50,14 @@ class IpRange(Base):
     __table_args__ = {'autoload': True}
 
 
-def load_session():
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    return session
-
-
-session = load_session()
+def thread_scoped_session(func):
+    def inner(*args, **kwargs):
+        Session()
+        try:
+            return func(*args, **kwargs)
+        finally:
+            Session.remove()
+    return inner
 
 
 def update_row(table, data):
@@ -64,28 +66,28 @@ def update_row(table, data):
             where(table.id == data['id']).
             values(**data)
     )
-    session.execute(stmt)
+    Session.execute(stmt)
 
 
 def insert_row(table, data):
     stmt = (
         insert(table).values(**data)
     )
-    session.execute(stmt)
-    return int(next(session.execute("SELECT LAST_INSERT_ID()"))[0])
+    Session.execute(stmt)
+    return int(next(Session.execute("SELECT LAST_INSERT_ID()"))[0])
 
 
 def delete_row(table, data):
     stmt = (
         delete(table).where(table.id == data['id'])
     )
-    session.execute(stmt)
+    Session.execute(stmt)
 
 
 def upsert(table, data, org_id):
     for d in data:
         d['org_id'] = org_id
-    prev_q = session.query(table) \
+    prev_q = Session.query(table) \
         .filter(table.org_id == org_id) \
         .all()
     prev_dict = {}
@@ -102,18 +104,27 @@ def upsert(table, data, org_id):
         delete_row(table, del_it)
 
 
+def row2dict(row):
+    d = {}
+    for column in row.__table__.columns:
+        d[column.name] = getattr(row, column.name)
+    return d
+
+
+@thread_scoped_session
 def add_organization(org_data):
     try:
         if 'id' in org_data:
             del org_data['id']
         org_id = insert_row(Organization, org_data)
-        session.commit()
+        Session.commit()
         return get_organization(org_id)
     except:
-        session.rollback()
+        Session.rollback()
         raise Exception('add error')
 
 
+@thread_scoped_session
 def update_organization(org_id, org_data):
     try:
         organization = org_data['organization']
@@ -123,30 +134,25 @@ def update_organization(org_id, org_data):
         upsert(IpRange, org_data['ip_range'], org_id)
         upsert(Contact, org_data['contact'], org_id)
         upsert(DomainName, org_data['domain_name'], org_id)
-        session.commit()
+        Session.commit()
         return get_organization(org_id)
     except:
-        session.rollback()
+        Session.rollback()
         raise Exception('update error')
 
 
-def row2dict(row):
-    d = {}
-    for column in row.__table__.columns:
-        d[column.name] = getattr(row, column.name)
-    return d
-
-
+@thread_scoped_session
 def list_organizations():
     organizations = []
-    for org_row in session.query(Organization).all():
+    for org_row in Session.query(Organization).all():
         organizations.append(row2dict(org_row))
     return organizations
 
 
+@thread_scoped_session
 def get_organization(org_id):
     def get_list(table, org_id):
-        res = session.query(table)\
+        res = Session.query(table)\
                      .filter(table.org_id == org_id) \
                      .order_by(table.id) \
                      .all()
@@ -156,7 +162,7 @@ def get_organization(org_id):
             del row_dict['org_id']
             res_l.append(row_dict)
         return res_l
-    org_res = session.query(Organization).get(org_id)
+    org_res = Session.query(Organization).get(org_id)
     organization = {
         'organization': row2dict(org_res),
         'asn': get_list(ASN, org_id),
@@ -167,20 +173,21 @@ def get_organization(org_id):
     return organization
 
 
+@thread_scoped_session
 def delete_organization(org_id):
     try:
         def delete_dependent(table, org_id):
             stmt = (
                 delete(table).where(table.org_id == org_id)
             )
-            session.execute(stmt)
+            Session.execute(stmt)
 
         delete_dependent(ASN, org_id)
         delete_dependent(Contact, org_id)
         delete_dependent(DomainName, org_id)
         delete_dependent(IpRange, org_id)
         delete_row(Organization, {'id': org_id})
-        session.commit()
+        Session.commit()
     except:
-        session.rollback()
+        Session.rollback()
         raise Exception('delete error')

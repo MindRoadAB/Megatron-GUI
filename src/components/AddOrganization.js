@@ -24,6 +24,7 @@ const AddOrganization = ({onAdd, visible, onClose}) => {
         const created = timestamp;
         const last_modified = timestamp;
         const modified_by = 'GUI';
+        const comment = '[1 ' + date.toISOString().split('.')[0] + '] Created.';
 
         if(!name){
             alert('Please add a name to the org');
@@ -35,16 +36,9 @@ const AddOrganization = ({onAdd, visible, onClose}) => {
         }
 
         onAdd({auto_update_match_fields, name, registration_no, prio_id, country_code, 
-            language_code, description, enabled, created, last_modified, modified_by });
-        clearForm();
-    }
-
-    const clearForm = () =>{
-        setName('');
-        setRegistrationNumber('');
-        setCountryCode('SE');
-        setLanguageCode('sv');
-        setDescirtpion('');
+            language_code, description, enabled, created, last_modified, modified_by, comment });
+        
+        onClose();
     }
 
     return (
@@ -146,8 +140,7 @@ const AddOrganization = ({onAdd, visible, onClose}) => {
                     <Modal.Footer>
                         <Button className='m-1' 
                             variant='primary' 
-                            type='submit' 
-                            onClick={onClose}
+                            type='submit'
                         >
                             Submit
                         </Button>

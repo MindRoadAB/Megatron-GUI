@@ -55,6 +55,9 @@ def thread_scoped_session(func):
         Session()
         try:
             return func(*args, **kwargs)
+        except Exception as e:
+            Session.rollback()
+            raise e
         finally:
             Session.remove()
     return inner
@@ -113,34 +116,26 @@ def row2dict(row):
 
 @thread_scoped_session
 def add_organization(org_data):
-    try:
-        if 'id' in org_data:
-            org_id = org_data['id']
-            update_row(Organization, org_data)
-        else:
-            org_id = insert_row(Organization, org_data)
-        Session.commit()
-        return get_organization(org_id)
-    except:
-        Session.rollback()
-        raise Exception('add error')
+    if 'id' in org_data:
+        org_id = org_data['id']
+        update_row(Organization, org_data)
+    else:
+        org_id = insert_row(Organization, org_data)
+    Session.commit()
+    return get_organization(org_id)
 
 
 @thread_scoped_session
 def update_organization(org_id, org_data):
-    try:
-        organization = org_data['organization']
-        organization['id'] = org_id
-        update_row(Organization, organization)
-        upsert(ASN, org_data['asn'], org_id)
-        upsert(IpRange, org_data['ip_range'], org_id)
-        upsert(Contact, org_data['contact'], org_id)
-        upsert(DomainName, org_data['domain_name'], org_id)
-        Session.commit()
-        return get_organization(org_id)
-    except:
-        Session.rollback()
-        raise Exception('update error')
+    organization = org_data['organization']
+    organization['id'] = org_id
+    update_row(Organization, organization)
+    upsert(ASN, org_data['asn'], org_id)
+    upsert(IpRange, org_data['ip_range'], org_id)
+    upsert(Contact, org_data['contact'], org_id)
+    upsert(DomainName, org_data['domain_name'], org_id)
+    Session.commit()
+    return get_organization(org_id)
 
 
 @thread_scoped_session
@@ -177,21 +172,17 @@ def get_organization(org_id):
 
 @thread_scoped_session
 def delete_organization(org_id):
-    try:
-        def delete_dependent(table, org_id):
-            stmt = (
-                delete(table).where(table.org_id == org_id)
-            )
-            Session.execute(stmt)
-        delete_dependent(ASN, org_id)
-        delete_dependent(Contact, org_id)
-        delete_dependent(DomainName, org_id)
-        delete_dependent(IpRange, org_id)
-        delete_row(Organization, {'id': org_id})
-        Session.commit()
-    except:
-        Session.rollback()
-        raise Exception('delete error')
+    def delete_dependent(table, org_id):
+        stmt = (
+            delete(table).where(table.org_id == org_id)
+        )
+        Session.execute(stmt)
+    delete_dependent(ASN, org_id)
+    delete_dependent(Contact, org_id)
+    delete_dependent(DomainName, org_id)
+    delete_dependent(IpRange, org_id)
+    delete_row(Organization, {'id': org_id})
+    Session.commit()
 
 
 @thread_scoped_session

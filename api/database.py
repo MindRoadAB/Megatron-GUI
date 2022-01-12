@@ -115,8 +115,10 @@ def row2dict(row):
 def add_organization(org_data):
     try:
         if 'id' in org_data:
-            del org_data['id']
-        org_id = insert_row(Organization, org_data)
+            org_id = org_data['id']
+            update_row(Organization, org_data)
+        else:
+            org_id = insert_row(Organization, org_data)
         Session.commit()
         return get_organization(org_id)
     except:
@@ -181,7 +183,6 @@ def delete_organization(org_id):
                 delete(table).where(table.org_id == org_id)
             )
             Session.execute(stmt)
-
         delete_dependent(ASN, org_id)
         delete_dependent(Contact, org_id)
         delete_dependent(DomainName, org_id)

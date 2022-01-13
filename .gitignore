@@ -29,3 +29,5 @@ yarn-error.log*
 .history/
 *.exe
 tempCodeRunnerFile.cpp
+
+api/__pycache__

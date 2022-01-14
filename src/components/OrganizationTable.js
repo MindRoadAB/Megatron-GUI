@@ -1,7 +1,15 @@
 import {Table, Button, ButtonGroup } from "react-bootstrap"
 import {Link} from 'react-router-dom'
+import DeletionModal from "./DeletionModal"
+import { useState } from "react"
 
 const OrganizationTable = ({data, remove}) => {
+
+    const [showDeleteOrg, setShow] = useState(false);
+    const [org, setOrg] = useState(null);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     return (
         <div>
@@ -33,7 +41,7 @@ const OrganizationTable = ({data, remove}) => {
                                         <Button
                                             className='m-1' 
                                             variant='danger'
-                                            onClick={() => remove(row.id)}
+                                            onClick={() => {setOrg(row); handleShow()}}
                                         >
                                             Delete
                                         </Button>
@@ -43,7 +51,15 @@ const OrganizationTable = ({data, remove}) => {
                    }
                 </tbody>
             </Table>
+
+            {showDeleteOrg &&
+            <DeletionModal onCloseClick={() => handleClose()} 
+                orgToDelete={org}
+                onDelete={remove}/>}
+
         </div>
+
+        
     )
 }
 

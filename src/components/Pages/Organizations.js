@@ -18,7 +18,7 @@ const Organizations = () => {
 
     // Sets what is searched for by default, id and name 
     // Is then changed when the checkboxes change
-    const [searchColumns, setSearchColumns] = useState(['id', 'name']);
+    const [searchColumns] = useState(['id', 'name']);
 
 
     // Gets the data when page is loaded and sets the data state

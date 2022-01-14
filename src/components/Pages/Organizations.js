@@ -33,7 +33,7 @@ const Organizations = () => {
     
     // API call to fetch the orgs, maybe should be in different file?
     const fetchOrganizations = async () =>{
-        const res = await fetch('/organization');
+        const res = await fetch('/api/organization');
         const data = await res.json();
         return data;
     }
@@ -41,7 +41,7 @@ const Organizations = () => {
     // API call to add an org, maybe should be in different file?
     const addOrganization = async (org) => {
         try{
-            const res = await fetch('/organization',
+            const res = await fetch('/api/organization',
             {
                 method: 'POST',
                 headers: {
@@ -60,7 +60,7 @@ const Organizations = () => {
 
     const deleteOrganization = async (id) => {
         try{
-            await fetch('/organization/' + id,
+            await fetch('/api/organization/' + id,
             {
                 method: 'DELETE'
             });

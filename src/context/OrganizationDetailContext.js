@@ -13,7 +13,7 @@ const OrganizationDetailContext = ({orgId, children}) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('/organization/' + orgId);
+                const response = await fetch('/api/organization/' + orgId);
                 const fetchedOrg = await response.json();
                 setOrganization(fetchedOrg);
             } catch (error) {
@@ -24,7 +24,7 @@ const OrganizationDetailContext = ({orgId, children}) => {
     }, []);
 
     const syncWithDb = async (newOrganization) => {
-        const postResponse = await fetch('/organization/' + orgId, {
+        const postResponse = await fetch('/api/organization/' + orgId, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -1,10 +1,12 @@
 import {useState, useEffect} from 'react';
 import AddOrganization from '../AddOrganization';
 import OrganizationTable from '../OrganizationTable';
-import {Button, Form, Container} from 'react-bootstrap'
+import {Button, ButtonGroup, Form, Container} from 'react-bootstrap'
+import {BsArrowCounterclockwise} from 'react-icons/bs'
 
 const Organizations = () => {     
     const [showAddOrg, setShowAddOrg] = useState(false);
+    const[isLoading, setLoading] = useState(false);
 
     const handleClose = () => setShowAddOrg(false);
     const handleShow = () => setShowAddOrg(true);
@@ -36,6 +38,13 @@ const Organizations = () => {
         const res = await fetch('/api/organization');
         const data = await res.json();
         return data;
+    }
+
+    const refreshData = async () => {
+        setLoading(true);
+        const organizations = await fetchOrganizations();
+        setData(organizations);
+        setLoading(false);
     }
 
     // API call to add an org, maybe should be in different file?
@@ -85,12 +94,22 @@ const Organizations = () => {
        <Container className='mt-5'>
            <h1>Organizations</h1>
            <div>
-                <Button className='mb-3'
-                        variant ='success'
-                        onClick={handleShow}
-                >
-                    Add organization
-                </Button>
+               <ButtonGroup>
+                    <Button className='mb-3 m-1'
+                            variant ='success'
+                            onClick={handleShow}
+                    >
+                        Add organization
+                     </Button>
+
+                     <Button className='mb-3 m-1'
+                            variant ='primary'
+                            onClick={refreshData}
+                    >
+                        {isLoading ? 'Loading...' : <BsArrowCounterclockwise/>}
+                    </Button>
+               </ButtonGroup>
+                
            </div>
            
             <div>

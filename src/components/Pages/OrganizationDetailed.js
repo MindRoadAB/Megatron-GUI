@@ -21,7 +21,6 @@ const OrganizationInfo = () => {
 const OrganizationDetailed = () => {
 
     const { orgId } = useParams();
-
     return (
         <OrganizationDetailContext orgId={orgId}>
             <Container>

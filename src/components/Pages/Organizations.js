@@ -1,7 +1,9 @@
 import {useState, useEffect} from 'react';
 import AddOrganization from '../AddOrganization';
 import OrganizationTable from '../OrganizationTable';
-import {Button, Form, Container} from 'react-bootstrap'
+import {Button, Form, Container} from 'react-bootstrap';
+import { CSVLink } from 'react-csv';
+
 
 const Organizations = () => {     
     const [showAddOrg, setShowAddOrg] = useState(false);
@@ -74,7 +76,6 @@ const Organizations = () => {
 
     // Filter the data based on if the columns match the input from the text box (query)
     const search = (rows) =>{
-        console.log(data);
         return rows.filter(
             (row) => 
                 searchColumns.some((column) => row[column].toString().toLowerCase().indexOf(query.toLowerCase()) > -1)
@@ -107,7 +108,16 @@ const Organizations = () => {
            <div>
                <OrganizationTable data={search(data)} remove={deleteOrganization}/>
            </div>
-            
+            <div>
+                <CSVLink data={data}
+                    filename={'organizations.csv'}
+                    className='btn btn-secondary mt-2'
+                    target='_blank'
+                
+                >
+                    Export table
+                </CSVLink>
+            </div>
        </Container>
 
     )

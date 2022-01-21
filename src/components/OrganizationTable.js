@@ -2,14 +2,20 @@ import {Table, Button, ButtonGroup } from "react-bootstrap"
 import {Link} from 'react-router-dom'
 import DeletionModal from "./DeletionModal"
 import { useState } from "react"
+import EditModal from "./EditModal"
 
-const OrganizationTable = ({data, remove}) => {
+const OrganizationTable = ({data, remove, edit}) => {
 
     const [showDeleteOrg, setShow] = useState(false);
+    const [showEditOrg, setShowEditOrg] = useState(false);
+
     const [org, setOrg] = useState(null);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const handleCloseEditOrg = () => setShowEditOrg(false);
+    const handleShowEditOrg = () => setShowEditOrg(true);
 
     return (
         <div>
@@ -33,9 +39,17 @@ const OrganizationTable = ({data, remove}) => {
                                         <Button as={Link} 
                                             to={'/organization/' + row.id} 
                                             className='m-1' 
-                                            variant='primary'
+                                            variant='secondary'
                                         >
                                             View
+                                        </Button>
+
+                                        <Button
+                                            className='m-1' 
+                                            variant='primary'
+                                            onClick={() => {setOrg(row); handleShowEditOrg()}}
+                                        >
+                                            Edit
                                         </Button>
 
                                         <Button
@@ -56,6 +70,13 @@ const OrganizationTable = ({data, remove}) => {
             <DeletionModal onCloseClick={() => handleClose()} 
                 orgToDelete={org}
                 onDelete={remove}/>}
+            {showEditOrg && 
+                <EditModal orgToEdit={org} 
+                    visible={showEditOrg} 
+                    onEditSubmit={edit}
+                    onClose={handleCloseEditOrg}
+                />
+            }
 
         </div>
 

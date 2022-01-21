@@ -4,9 +4,6 @@ import {Form, Button, Container, Row, Col, Modal} from 'react-bootstrap'
 const AddOrganization = ({onAdd, visible, onClose}) => {
     const [name, setName] = useState('');
     const [registration_no, setRegistrationNumber] = useState('');
-    //const [ASN, setAsn] = useState('');
-    //const [domains, setDomains] = useState('');
-    //const [IPRanges, setIpRanges] = useState('');
     const [country_code, setCountryCode] = useState('SE');
     const [language_code, setLanguageCode] = useState('sv');
     const [description, setDescirtpion] = useState('');
@@ -27,11 +24,11 @@ const AddOrganization = ({onAdd, visible, onClose}) => {
         const comment = '[1 ' + date.toISOString().split('.')[0] + '] Created.';
 
         if(!name){
-            alert('Please add a name to the org');
+            alert('Please add a name to the organization');
             return;
         }
         if(!prio_id){
-            alert('Please add a prio to the org');
+            alert('Please add a prio to the organization');
             return;
         }
 

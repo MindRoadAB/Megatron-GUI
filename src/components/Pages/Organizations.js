@@ -1,12 +1,10 @@
 import {useState, useEffect} from 'react';
 import AddOrganization from '../AddOrganization';
 import OrganizationTable from '../OrganizationTable';
-import {Button, ButtonGroup, Form, Container} from 'react-bootstrap'
-import {BsArrowCounterclockwise} from 'react-icons/bs'
+import {Button, Form, Container} from 'react-bootstrap'
 
 const Organizations = () => {     
     const [showAddOrg, setShowAddOrg] = useState(false);
-    const[isLoading, setLoading] = useState(false);
 
     const handleClose = () => setShowAddOrg(false);
     const handleShow = () => setShowAddOrg(true);
@@ -40,12 +38,6 @@ const Organizations = () => {
         return data;
     }
 
-    const refreshData = async () => {
-        setLoading(true);
-        const organizations = await fetchOrganizations();
-        setData(organizations);
-        setLoading(false);
-    }
 
     // API call to add an org, maybe should be in different file?
     const addOrganization = async (org) => {
@@ -64,6 +56,25 @@ const Organizations = () => {
             setData([...data, newData.organization]);
         } catch(error){
             alert('Could not create new organization');
+        }
+    }
+
+    const editOrganization = async (org) => {
+        try{
+            const res = await fetch('/api/organization/' + org.id,
+            {
+                method: 'PATCH',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(org)
+            });
+            
+            const newData = await res.json();
+
+            setData([newData]);
+        } catch(error){
+            alert('Could not update organization');
         }
     }
 
@@ -94,37 +105,31 @@ const Organizations = () => {
        <Container className='mt-5'>
            <h1>Organizations</h1>
            <div>
-               <ButtonGroup>
-                    <Button className='mb-3 m-1'
-                            variant ='success'
-                            onClick={handleShow}
-                    >
-                        Add organization
-                     </Button>
-
-                     <Button className='mb-3 m-1'
-                            variant ='primary'
-                            onClick={refreshData}
-                    >
-                        {isLoading ? 'Loading...' : <BsArrowCounterclockwise/>}
-                    </Button>
-               </ButtonGroup>
-                
+                <Button className='mb-3 m-1'
+                        variant ='success'
+                        onClick={handleShow}
+                >
+                    Add organization
+                 </Button>
            </div>
            
             <div>
-               <AddOrganization onAdd={addOrganization} visible={showAddOrg} onClose={handleClose}/>
+               <AddOrganization onAdd={addOrganization} 
+                    visible={showAddOrg} 
+                    onClose={handleClose}
+                />
             </div>
            <div>
                <Form.Control
                     className='mb-3'
                     type="text"
                     placeholder='Search...'
-                    value={query} onChange={(e) => setQuery(e.target.value)}/>
+                    value={query} onChange={(e) => setQuery(e.target.value)}
+                />
                     
            </div>
            <div>
-               <OrganizationTable data={search(data)} remove={deleteOrganization}/>
+               <OrganizationTable data={search(data)} remove={deleteOrganization} edit={editOrganization}/>
            </div>
             
        </Container>

@@ -71,10 +71,11 @@ const OrganizationTable = ({data, remove, edit}) => {
                 orgToDelete={org}
                 onDelete={remove}/>}
             {showEditOrg && 
-                <EditModal orgToEdit={org} 
-                    visible={showEditOrg} 
+                <EditModal visible={showEditOrg} 
                     onEditSubmit={edit}
                     onClose={handleCloseEditOrg}
+                    edit={true}
+                    orgToEdit={org}
                 />
             }
 

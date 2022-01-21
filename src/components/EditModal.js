@@ -1,41 +1,62 @@
 import { useState } from 'react'
 import {Form, Button, Modal, Col, Row, Container} from 'react-bootstrap'
 
-const EditModal = ({orgToEdit, visible, onEditSubmit, onClose}) => {
+const EditModal = ({visible, onEditSubmit, onClose, edit, orgToEdit={}}) => {
     
-  
-
-    // Date
-    const current = new Date();
-    const date = `${current.getFullYear()}-${current.getMonth()+1}-${current.getDate()}`;
 
     // States
-    const [name, setName] = useState(orgToEdit.name);
-    const [id] = useState(orgToEdit.id);
-    const [prio_id, setPrio] = useState(orgToEdit.prio_id);
-    const [registration_no, setRegistrationNumber] = useState(orgToEdit.registration_no);
-    const [country_code, setCountryCode] = useState(orgToEdit.country_code);
-    const [language_code, setLanguageCode] = useState(orgToEdit.language_code);
-    const [description, setDescirtpion] = useState(orgToEdit.description);
-    const [enabled, setEnabled] = useState(orgToEdit.enabled);
-    const [lastModified] = useState(date);
-    const [comments] = useState(orgToEdit.comments);
+    const [name, setName] = useState(edit? orgToEdit.name : '');
+    const [prio_id, setPrio] = useState(edit? orgToEdit.prio_id : '');
+    const [registration_no, setRegistrationNumber] = useState(edit? orgToEdit.registration_no : '');
+    const [country_code, setCountryCode] = useState(edit? orgToEdit.country_code : 'SE');
+    const [language_code, setLanguageCode] = useState(edit? orgToEdit.language_code : 'sv');
+    const [description, setDescirtpion] = useState(edit? orgToEdit.description : '');
+    const [enabled, setEnabled] = useState(edit? orgToEdit.enabled : false);
+
+    const [header] = useState(edit? 'Edit ' + orgToEdit.name : 'Add organization');
 
     // Submit method
     const onSubmit = (e) =>{
         e.preventDefault();
 
+        // Maybe these should be set in backend
+        const auto_update_match_fields = true;
+        const date = new Date();
+        const timestamp = date.getTime() / 1000;
+
+        const created = timestamp;
+        const last_modified = timestamp;
+        const modified_by = 'GUI';
+        let comment;
+
+        if(edit)
+            comment = '[1 ' + date.toISOString().split('.')[0] + '] Edited.';
+        else
+            comment = '[1 ' + date.toISOString().split('.')[0] + '] Created.';
+
         if(!name){
-            alert('Please add a name to the org');
+            alert('Please add a name to the organization');
+            return;
+        }
+        if(!prio_id){
+            alert('Please add a prio to the organization');
             return;
         }
 
-        onEditSubmit({id, name, registration_no, prio_id, country_code, 
-                    language_code, enabled, description, 
-                    lastModified, comments});
+        onEditSubmit({auto_update_match_fields, name, registration_no, prio_id, country_code, 
+            language_code, description, enabled, created, last_modified, modified_by, comment });
+        clearForm();
         onClose();
     }
-    console.log(enabled);
+
+    const clearForm = () =>{
+        setName('');
+        setRegistrationNumber('');
+        setCountryCode('SE');
+        setLanguageCode('sv');
+        setDescirtpion(''); 
+        setEnabled(false);
+    }
 
     // Modal form
     return (
@@ -44,7 +65,7 @@ const EditModal = ({orgToEdit, visible, onEditSubmit, onClose}) => {
             centered
         >
             <Modal.Header className='mb-3' closeButton>
-                <Modal.Title>Edit {orgToEdit.name}</Modal.Title>
+                <Modal.Title>{header}</Modal.Title>
             </Modal.Header>
             
             <Container fluid>
@@ -53,7 +74,7 @@ const EditModal = ({orgToEdit, visible, onEditSubmit, onClose}) => {
                         <Form.Label column>Organization name:</Form.Label>
                         <Col>
                             <Form.Control type='text' 
-                                placeholder='orgToEdit name'
+                                placeholder='Organization name'
                                 value={name}
                                 onChange={(e) => setName(e.target.value) }
                             />
@@ -96,7 +117,7 @@ const EditModal = ({orgToEdit, visible, onEditSubmit, onClose}) => {
                         <Form.Label column>Country code:</Form.Label>
                         <Col>
                             <Form.Control type='text' 
-                                placeholder='Country code:'
+                                placeholder='Country code'
                                 value={country_code}
                                 onChange={(e) => setCountryCode(e.target.value) }
                             />
@@ -128,8 +149,8 @@ const EditModal = ({orgToEdit, visible, onEditSubmit, onClose}) => {
                     <Form.Group as={Row} className='mb-2'>
                         <Col sm={{ span: 10, offset: 6 }}>
                             <Form.Check label='Enabled' 
-                                checked = {enabled? true : false}
-                                onChange={(e) => setEnabled(() => e.target.checked ? '1' : '0') }
+                                checked = {enabled  ? true : false}
+                                onChange={(e) => setEnabled(() => e.target.checked ? true : false) }
                             />
                         </Col>
                     </Form.Group>

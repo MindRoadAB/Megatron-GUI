@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
-import AddOrganization from '../AddOrganization';
 import OrganizationTable from '../OrganizationTable';
 import {Button, Form, Container} from 'react-bootstrap'
+import EditModal from '../EditModal'
 
 const Organizations = () => {     
     const [showAddOrg, setShowAddOrg] = useState(false);
@@ -41,6 +41,7 @@ const Organizations = () => {
 
     // API call to add an org, maybe should be in different file?
     const addOrganization = async (org) => {
+        console.log(org);
         try{
             const res = await fetch('/api/organization',
             {
@@ -56,25 +57,6 @@ const Organizations = () => {
             setData([...data, newData.organization]);
         } catch(error){
             alert('Could not create new organization');
-        }
-    }
-
-    const editOrganization = async (org) => {
-        try{
-            const res = await fetch('/api/organization/' + org.id,
-            {
-                method: 'PATCH',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(org)
-            });
-            
-            const newData = await res.json();
-
-            setData([newData]);
-        } catch(error){
-            alert('Could not update organization');
         }
     }
 
@@ -94,7 +76,6 @@ const Organizations = () => {
 
     // Filter the data based on if the columns match the input from the text box (query)
     const search = (rows) =>{
-        console.log(data);
         return rows.filter(
             (row) => 
                 searchColumns.some((column) => row[column].toString().toLowerCase().indexOf(query.toLowerCase()) > -1)
@@ -114,9 +95,10 @@ const Organizations = () => {
            </div>
            
             <div>
-               <AddOrganization onAdd={addOrganization} 
-                    visible={showAddOrg} 
+               <EditModal visible={showAddOrg} 
+                    onEditSubmit={addOrganization} 
                     onClose={handleClose}
+                    edit={false}
                 />
             </div>
            <div>
@@ -129,7 +111,7 @@ const Organizations = () => {
                     
            </div>
            <div>
-               <OrganizationTable data={search(data)} remove={deleteOrganization} edit={editOrganization}/>
+               <OrganizationTable data={search(data)} remove={deleteOrganization} edit={addOrganization}/>
            </div>
             
        </Container>

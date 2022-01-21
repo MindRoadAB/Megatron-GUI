@@ -11,7 +11,6 @@ const Organizations = () => {
     const handleClose = () => setShowAddOrg(false);
     const handleShow = () => setShowAddOrg(true);
 
-
     // Sets the default data state and then calls setData when we change it
     const [data, setData] = useState([]);
 
@@ -22,7 +21,6 @@ const Organizations = () => {
     // Is then changed when the checkboxes change
     const [searchColumns] = useState(['id', 'name']);
 
-
     // Gets the data when page is loaded and sets the data state
     useEffect(() => {
         const getOrganizations = async () =>{
@@ -31,7 +29,8 @@ const Organizations = () => {
         };
         getOrganizations();
     
-    }, []);
+    }, []); 
+
     
     // API call to fetch the orgs, maybe should be in different file?
     const fetchOrganizations = async () =>{
@@ -56,7 +55,7 @@ const Organizations = () => {
 
             setData([...data, newData.organization]);
         } catch(error){
-            alert('Could not create new organization');
+            alert('Could not create new organization'); 
         }
     }
 
@@ -87,39 +86,42 @@ const Organizations = () => {
            <h1>Organizations</h1>
            <div>
                 <Button className='mb-3'
-                        variant ='success'
-                        onClick={handleShow}
+                    variant ='success'
+                    onClick={handleShow}
                 >
                     Add organization
                 </Button>
            </div>
            
             <div>
-               <AddOrganization onAdd={addOrganization} visible={showAddOrg} onClose={handleClose}/>
+               <AddOrganization onAdd={addOrganization} 
+                    visible={showAddOrg} 
+                    onClose={handleClose}
+                />
             </div>
            <div>
                <Form.Control
                     className='mb-3'
                     type="text"
                     placeholder='Search...'
-                    value={query} onChange={(e) => setQuery(e.target.value)}/>
+                    value={query} 
+                    onChange={(e) => setQuery(e.target.value)}
+                />
                     
            </div>
            <div>
                <OrganizationTable data={search(data)} remove={deleteOrganization}/>
            </div>
             <div>
-                <CSVLink data={data}
+                <CSVLink data={search(data)}
                     filename={'organizations.csv'}
                     className='btn btn-secondary mt-2'
                     target='_blank'
-                
                 >
                     Export table
                 </CSVLink>
             </div>
        </Container>
-
     )
 }
 

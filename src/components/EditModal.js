@@ -56,6 +56,7 @@ const EditModal = ({visible, onEditSubmit, onClose, edit, orgToEdit={}}) => {
         setLanguageCode('sv');
         setDescirtpion(''); 
         setEnabled(false);
+        
     }
 
     // Modal form

@@ -67,6 +67,7 @@ const Organizations = () => {
             const fetchedOrg = await response.json();
             copyOrg = fetchedOrg;
             copyOrg['organization'] = org;
+
         } catch (error) {
             alert('Failed to fetch organization data');
         }
@@ -84,8 +85,9 @@ const Organizations = () => {
 
             setData(([...data.filter((item) => item.id !== id), newData.organization])
                 .sort((a,b) => a.id - b.id));
+
         }catch (error) {
-            alert('Failed to update organization data');
+            alert('Failed to update organization');
         }
     }
 

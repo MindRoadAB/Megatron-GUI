@@ -15,6 +15,23 @@ const EditModal = ({visible, onEditSubmit, onClose, edit, orgToEdit={}}) => {
 
     const [header] = useState(edit? 'Edit ' + orgToEdit.name : 'Add organization');
 
+    const prios =  [
+        {value: 2, text: 'Organization Category 1 [95]'},
+        {value: 3, text: 'Organization Category 2 [90]'},
+        {value: 4, text: 'Organization Category 3 [80]'},
+        {value: 5, text: 'Organization Category 4 [70]'},
+        {value: 6, text: 'Organization Category 5 [65]'},
+        {value: 7, text: 'Organization Category 6 [60]'},
+        {value: 8, text: 'Organization Category 7 [50]'},
+        {value: 9, text: 'Organization Category 8 [45]'},
+        {value: 10, text: 'Organization Category 9 [40]'},
+        {value: 11, text: 'Organization Category 10 [30]'},
+        {value: 12, text: 'Organization Category 11 [20]'},
+        {value: 13, text: 'ISP [10]'},
+        {value: 14, text: 'Parked with no prio [0]'},
+
+    ]
+
     // Submit method
     const onSubmit = (e) =>{
         e.preventDefault();
@@ -87,18 +104,14 @@ const EditModal = ({visible, onEditSubmit, onClose, edit, orgToEdit={}}) => {
                         <Col>
                             <Form.Select onChange={(e) => setPrio(e.target.value) }>
                                 <option></option>
-                                <option value='2'>Organization Category 1 [95]</option>
-                                <option value='3'>Organization Category 2 [90]</option>
-                                <option value='4'>Organization Category 3 [80]</option>
-                                <option value='5'>Organization Category 4 [70]</option>
-                                <option value='6'>Organization Category 5 [65]</option>
-                                <option value='7'>Organization Category 6 [60]</option>
-                                <option value='8'>Organization Category 8 [45]</option>
-                                <option value='10'>Organization Category 9 [40]</option>
-                                <option value='11'>Organization Category 10 [30]</option>
-                                <option value='12'>Organization Category 11 [20]</option>
-                                <option value='13'>ISP [10]</option>
-                                <option value='1'>No prio [0]</option>
+                                {prios.map(item => {
+                                    return (<option key={item.value} 
+                                                value={item.value} 
+                                                selected={(item.value === prio_id)? true : false}
+                                            >
+                                                {item.text}
+                                            </option>)
+                                })}
                             </Form.Select>
                         </Col>
                     </Form.Group>
@@ -150,7 +163,7 @@ const EditModal = ({visible, onEditSubmit, onClose, edit, orgToEdit={}}) => {
                     <Form.Group as={Row} className='mb-2'>
                         <Col sm={{ span: 10, offset: 6 }}>
                             <Form.Check label='Enabled' 
-                                checked = {enabled  ? true : false}
+                                checked={enabled  ? true : false}
                                 onChange={(e) => setEnabled(() => e.target.checked ? true : false) }
                             />
                         </Col>

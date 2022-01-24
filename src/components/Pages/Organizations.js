@@ -1,14 +1,14 @@
 import {useState, useEffect} from 'react';
 import OrganizationTable from '../OrganizationTable';
-import {Button, Form, Container} from 'react-bootstrap'
 import EditModal from '../EditModal'
+import {Button, Form, Container} from 'react-bootstrap';
+import { CSVLink } from 'react-csv';
 
 const Organizations = () => {     
     const [showAddOrg, setShowAddOrg] = useState(false);
 
     const handleClose = () => setShowAddOrg(false);
     const handleShow = () => setShowAddOrg(true);
-
 
     // Sets the default data state and then calls setData when we change it
     const [data, setData] = useState([]);
@@ -20,7 +20,6 @@ const Organizations = () => {
     // Is then changed when the checkboxes change
     const [searchColumns] = useState(['id', 'name']);
 
-
     // Gets the data when page is loaded and sets the data state
     useEffect(() => {
         const getOrganizations = async () =>{
@@ -29,7 +28,8 @@ const Organizations = () => {
         };
         getOrganizations();
     
-    }, []);
+    }, []); 
+
     
     // API call to fetch the orgs, maybe should be in different file?
     const fetchOrganizations = async () =>{
@@ -55,7 +55,7 @@ const Organizations = () => {
 
             setData([...data, newData.organization]);
         } catch(error){
-            alert('Could not create new organization');
+            alert('Could not create new organization'); 
         }
     }
 
@@ -137,7 +137,8 @@ const Organizations = () => {
                     className='mb-3'
                     type="text"
                     placeholder='Search...'
-                    value={query} onChange={(e) => setQuery(e.target.value)}
+                    value={query} 
+                    onChange={(e) => setQuery(e.target.value)}
                 />
                     
            </div>
@@ -146,9 +147,16 @@ const Organizations = () => {
                     remove={deleteOrganization} 
                     edit={updateOrganization}/>
            </div>
-            
+            <div>
+                <CSVLink data={search(data)}
+                    filename={'organizations.csv'}
+                    className='btn btn-secondary mt-2'
+                    target='_blank'
+                >
+                    Export table
+                </CSVLink>
+            </div>
        </Container>
-
     )
 }
 

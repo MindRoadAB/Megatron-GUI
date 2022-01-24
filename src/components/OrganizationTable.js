@@ -23,19 +23,19 @@ const OrganizationTable = ({data, remove, edit}) => {
             <Table striped bordered hover size='sm'>
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Description</th>
+                        <th key={'id'}>Id</th>
+                        <th key={'name'}>Name</th>
+                        <th key={'desc'}>Description</th>
                     </tr>
                 </thead>
                 <tbody>
                    {
                        data.map(row => 
-                            <tr>
-                                <td>{row.id}</td> 
-                                <td>{row.name}</td>
-                                <td>{row.description}</td>
-                                <td>
+                            <tr key={'content_'+ row.id}>
+                                <td key={'id_'+ row.id}>{row.id}</td> 
+                                <td key={'name_'+ row.name}>{row.name}</td>
+                                <td key={'desc_'+ row.description}>{row.description}</td>
+                                <td key={'btn_' + row.id }>
                                     <ButtonGroup className='float-end' >
                                         <Button as={Link} 
                                             to={'/organization/' + row.id} 

@@ -1,6 +1,7 @@
 import {Table, Button, ButtonGroup, Modal, Row, Col} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import {useOrganization} from "../../context/OrganizationDetailContext";
+import { CSVLink } from 'react-csv';
 
 const DataHeaders = ({items}) =>
     <thead>
@@ -134,7 +135,20 @@ const NewItemButton = ({onClick}) =>
         Add
     </Button>;
 
-const DetailedTable = ({header, dataKey, items, defaultObject={}}) => {
+const ExportTableButton = ({data, name}) =>
+    <CSVLink data={data}
+        filename={name + '_table.csv'}
+        className='btn btn-secondary m-1'
+        target='_blank'
+
+    >
+        Export table
+    </CSVLink>
+
+
+
+
+const DetailedTable = ({header, dataKey, items, defaultObject={}, addTimestamps=false}) => {
 
     const {
         organization,
@@ -160,13 +174,29 @@ const DetailedTable = ({header, dataKey, items, defaultObject={}}) => {
         <NewItemButton
             onClick={() => setEditItem({...defaultObject})}
         />
+
+        <ExportTableButton data={organization[dataKey]}
+            name={organization.organization.name + '_' + header}
+        />
+
         <EditModal
             title={header}
             items={items}
             editItem={editItem}
             handleClose={() => handleClose()}
             setEditItem={setEditItem}
-            onOk={() => updateOrganizationItem(dataKey, editItem)}
+            onOk={() => {
+                let updateItem = {...editItem};
+                if (addTimestamps) {
+                    const date = new Date();
+                    const timestamp = date.getTime() / 1000;
+                    if (!updateItem.created) {
+                        updateItem.created = timestamp;
+                    }
+                    updateItem.last_modified = timestamp;
+                }
+                updateOrganizationItem(dataKey, updateItem);
+            }}
         />
     </>;
 }

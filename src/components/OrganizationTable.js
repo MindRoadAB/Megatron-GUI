@@ -17,6 +17,7 @@ const OrganizationTable = ({data, remove, edit}) => {
     const handleCloseEditOrg = () => setShowEditOrg(false);
     const handleShowEditOrg = () => setShowEditOrg(true);
 
+
     return (
         <div>
             <Table striped bordered hover size='sm'>

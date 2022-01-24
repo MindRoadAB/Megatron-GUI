@@ -41,7 +41,6 @@ const Organizations = () => {
 
     // API call to add an org, maybe should be in different file?
     const addOrganization = async (org) => {
-        console.log(org);
         try{
             const res = await fetch('/api/organization',
             {
@@ -57,6 +56,36 @@ const Organizations = () => {
             setData([...data, newData.organization]);
         } catch(error){
             alert('Could not create new organization');
+        }
+    }
+
+    const updateOrganization = async (org, id) => {
+        let copyOrg;
+        try {
+            
+            const response = await fetch('/api/organization/' + id);
+            const fetchedOrg = await response.json();
+            copyOrg = fetchedOrg;
+            copyOrg['organization'] = org;
+        } catch (error) {
+            alert('Failed to fetch organization data');
+        }
+
+        try{
+            const res = await fetch('/api/organization/' + id,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(copyOrg)
+            });
+            const newData = await res.json();
+
+            setData(([...data.filter((item) => item.id !== id), newData.organization])
+                .sort((a,b) => a.id - b.id));
+        }catch (error) {
+            alert('Failed to update organization data');
         }
     }
 
@@ -111,7 +140,9 @@ const Organizations = () => {
                     
            </div>
            <div>
-               <OrganizationTable data={search(data)} remove={deleteOrganization} edit={addOrganization}/>
+               <OrganizationTable data={search(data)} 
+                    remove={deleteOrganization} 
+                    edit={updateOrganization}/>
            </div>
             
        </Container>

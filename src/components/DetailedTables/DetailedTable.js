@@ -146,9 +146,9 @@ const ExportTableButton = ({data, name}) =>
     </CSVLink>
 
 
-    
 
-const DetailedTable = ({header, dataKey, items, defaultObject={}}) => {
+
+const DetailedTable = ({header, dataKey, items, defaultObject={}, addTimestamps=false}) => {
 
     const {
         organization,
@@ -185,7 +185,18 @@ const DetailedTable = ({header, dataKey, items, defaultObject={}}) => {
             editItem={editItem}
             handleClose={() => handleClose()}
             setEditItem={setEditItem}
-            onOk={() => updateOrganizationItem(dataKey, editItem)}
+            onOk={() => {
+                let updateItem = {...editItem};
+                if (addTimestamps) {
+                    const date = new Date();
+                    const timestamp = date.getTime() / 1000;
+                    if (!updateItem.created) {
+                        updateItem.created = timestamp;
+                    }
+                    updateItem.last_modified = timestamp;
+                }
+                updateOrganizationItem(dataKey, updateItem);
+            }}
         />
     </>;
 }

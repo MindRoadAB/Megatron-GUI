@@ -5,10 +5,9 @@ const ContactTable = () =>
     <DetailedTable
         header={'Kontakter'}
         dataKey={'contact'}
+        addTimestamps={true}
         defaultObject={{
             email_type: 'smtp',
-            created: 0,
-            last_modified: 0,
             modified_by: 'gui',
             auto_update_email: 0,
             enabled: '1'

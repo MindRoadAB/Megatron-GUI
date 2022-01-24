@@ -1,160 +1,188 @@
-import Modal from 'react-modal'
 import { useState } from 'react'
-import {Form, Button} from 'react-bootstrap'
+import {Form, Button, Modal, Col, Row, Container} from 'react-bootstrap'
 
-const EditModal = ({onCloseClick, organization, onEditSubmit}) => {
-    // Styling
-    const modalStyle = {
-        content: {
-          top: '50%',
-          left: '50%',
-          right: 'auto',
-          bottom: 'auto',
-          marginRight: '-50%',
-          transform: 'translate(-50%, -50%)',
-          width: '25%'
-        },
-      };
-
-    // Date
-    const current = new Date();
-    const date = `${current.getFullYear()}-${current.getMonth()+1}-${current.getDate()}`;
+const EditModal = ({visible, onEditSubmit, onClose, edit, orgToEdit={}}) => {
+    
 
     // States
-    const [name, setName] = useState(organization.name);
-    const [id] = useState(organization.id);
-    const [prio, setPrio] = useState(organization.prio);
-    const [ASN, setAsn] = useState(organization.ASN);
-    const [domains, setDomains] = useState(organization.domains);
-    const [IPRanges, setIpRanges] = useState(organization.IPRanges);
-    const [regNo, setRegistrationNumber] = useState(organization.regNo);
-    const [countryCode, setCountryCode] = useState(organization.countryCode);
-    const [languageCode, setLanguageCode] = useState(organization.languageCode);
-    const [description, setDescirtpion] = useState(organization.description);
-    const [status, setStatus] = useState(organization.status);
-    const [lastModified] = useState(date);
-    const [comments] = useState(organization.comments);
+    const [id] = useState(edit? orgToEdit.id : '')
+    const [name, setName] = useState(edit? orgToEdit.name : '');
+    const [prio_id, setPrio] = useState(edit? orgToEdit.prio_id : '');
+    const [registration_no, setRegistrationNumber] = useState(edit? orgToEdit.registration_no : '');
+    const [country_code, setCountryCode] = useState(edit? orgToEdit.country_code : 'SE');
+    const [language_code, setLanguageCode] = useState(edit? orgToEdit.language_code : 'sv');
+    const [description, setDescirtpion] = useState(edit? orgToEdit.description : '');
+    const [enabled, setEnabled] = useState(edit? orgToEdit.enabled : false);
+
+    const [header] = useState(edit? 'Edit ' + orgToEdit.name : 'Add organization');
+
+    const prios =  [
+        {value: 2, text: 'Organization Category 1 [95]'},
+        {value: 3, text: 'Organization Category 2 [90]'},
+        {value: 4, text: 'Organization Category 3 [80]'},
+        {value: 5, text: 'Organization Category 4 [70]'},
+        {value: 6, text: 'Organization Category 5 [65]'},
+        {value: 7, text: 'Organization Category 6 [60]'},
+        {value: 8, text: 'Organization Category 7 [50]'},
+        {value: 9, text: 'Organization Category 8 [45]'},
+        {value: 10, text: 'Organization Category 9 [40]'},
+        {value: 11, text: 'Organization Category 10 [30]'},
+        {value: 12, text: 'Organization Category 11 [20]'},
+        {value: 13, text: 'ISP [10]'},
+        {value: 14, text: 'Parked with no prio [0]'},
+
+    ]
 
     // Submit method
     const onSubmit = (e) =>{
         e.preventDefault();
 
+        // Maybe these should be set in backend
+        const auto_update_match_fields = true;
+        const date = new Date();
+        const timestamp = date.getTime() / 1000;
+
+        const created = timestamp;
+        const last_modified = timestamp;
+        const modified_by = 'GUI';
+        let comment;
+
+        if(edit)
+            comment = '[1 ' + date.toISOString().split('.')[0] + '] Edited.';
+        else
+            comment = '[1 ' + date.toISOString().split('.')[0] + '] Created.';
+
         if(!name){
-            alert('Please add a name to the org');
+            alert('Please add a name to the organization');
+            return;
+        }
+        if(!prio_id){
+            alert('Please add a prio to the organization');
             return;
         }
 
-        onEditSubmit({id, name, regNo, IPRanges, domains, ASN, 
-                    prio, countryCode, languageCode, status, 
-                    description, lastModified, comments});
-        onCloseClick();
+        onEditSubmit({auto_update_match_fields, name, registration_no, prio_id, country_code, 
+            language_code, description, enabled, created, last_modified, modified_by, comment}, id);
+        clearForm();
+        onClose();
+    }
+
+    const clearForm = () =>{
+        setName('');
+        setRegistrationNumber('');
+        setCountryCode('SE');
+        setLanguageCode('sv');
+        setDescirtpion(''); 
+        setEnabled(false);
+        
     }
 
     // Modal form
     return (
-        <Modal isOpen={true} 
-            ariaHideApp={false} 
-            style={modalStyle}> 
+        <Modal show={visible} 
+            onHide={onClose}
+            centered
+        >
+            <Modal.Header className='mb-3' closeButton>
+                <Modal.Title>{header}</Modal.Title>
+            </Modal.Header>
+            
+            <Container fluid>
+                <Form onSubmit={onSubmit}>
+                    <Form.Group as={Row} className='mb-2'>
+                        <Form.Label column>Organization name:</Form.Label>
+                        <Col>
+                            <Form.Control type='text' 
+                                placeholder='Organization name'
+                                value={name}
+                                onChange={(e) => setName(e.target.value) }
+                            />
+                        </Col>
+                    </Form.Group>
+                    
+                    <Form.Group as={Row} className='mb-2'>
+                        <Form.Label column>Prio:</Form.Label>
+                        <Col>
+                            <Form.Select onChange={(e) => setPrio(e.target.value) }>
+                                <option></option>
+                                {prios.map(item => {
+                                    return (<option key={item.value} 
+                                                value={item.value} 
+                                                selected={(item.value === prio_id)? true : false}
+                                            >
+                                                {item.text}
+                                            </option>)
+                                })}
+                            </Form.Select>
+                        </Col>
+                    </Form.Group>
 
-            <h1>{name}</h1>
+                    <Form.Group as={Row} className='mb-2'>
+                        <Form.Label column>Registration number:</Form.Label>
+                        <Col>
+                            <Form.Control type='text' 
+                                placeholder='Registration number'
+                                value={registration_no}
+                                onChange={(e) => setRegistrationNumber(e.target.value) }
+                            />
+                        </Col>
+                    </Form.Group>
 
-            <Form onSubmit={onSubmit}>
-                <Form.Group className='mb-2'>
-                    <Form.Label>Organization name:</Form.Label>
-                    <Form.Control type='text' 
-                        placeholder='Organization name'
-                        value={name}
-                        onChange={(e) => setName(e.target.value) }/>
-                </Form.Group>
+                    <Form.Group as={Row} className='mb-2'>
+                        <Form.Label column>Country code:</Form.Label>
+                        <Col>
+                            <Form.Control type='text' 
+                                placeholder='Country code'
+                                value={country_code}
+                                onChange={(e) => setCountryCode(e.target.value) }
+                            />
+                        </Col>
+                    </Form.Group>
 
-                <Form.Group className='mb-2'>
-                    <Form.Label>AS Number:</Form.Label>
-                    <Form.Control type='text' 
-                        placeholder='AS number'
-                        value={ASN}
-                        onChange={(e) => setAsn(e.target.value) }/>
-                </Form.Group>
+                    <Form.Group as={Row} className='mb-2'>
+                        <Form.Label column>Language code:</Form.Label>
+                        <Col>
+                            <Form.Control type='text' 
+                                placeholder='Language code:'
+                                value={language_code}
+                                onChange={(e) => setLanguageCode(e.target.value) }
+                            />
+                        </Col>
+                    </Form.Group>
 
-                <Form.Group className='mb-2'>
-                    <Form.Label>Prio:</Form.Label>
-                    <Form.Select onChange={(e) => setPrio(e.target.value) }>
-                        <option></option>
-                        <option value='Organization Category 1 [95]'>Organization Category 1 [95]</option>
-                        <option value='Organization Category 2 [90]'>Organization Category 2 [90]</option>
-                        <option value='Organization Category 3 [80]'>Organization Category 3 [80]</option>
-                        <option value='Organization Category 4 [70]'>Organization Category 4 [70]</option>
-                        <option value='Organization Category 5 [65]'>Organization Category 5 [65]</option>
-                        <option value='Organization Category 6 [60]'>Organization Category 6 [60]</option>
-                        <option value='Organization Category 7 [50]'>Organization Category 7 [50]</option>
-                        <option value='Organization Category 8 [45]'>Organization Category 8 [45]</option>
-                        <option value='Organization Category 9 [40]'>Organization Category 9 [40]</option>
-                        <option value='Organization Category 10 [30]'>Organization Category 10 [30]</option>
-                        <option value='Organization Category 11 [20]'>Organization Category 11 [20]</option>
-                        <option value='ISP [10]'>ISP [10]</option>
-                        <option value='Parked with no prio [0]'>No prio [0]</option>
-                    </Form.Select>
-                </Form.Group>
+                    <Form.Group as={Row} className='mb-2'>
+                        <Form.Label column>Description:</Form.Label>
+                        <Col>
+                            <Form.Control as='textarea' 
+                                placeholder='Description'
+                                value={description}
+                                onChange={(e) => setDescirtpion(e.target.value) }
+                            />
+                        </Col>
+                    </Form.Group>
 
-                <Form.Group className='mb-2'>
-                    <Form.Label>Domains:</Form.Label>
-                    <Form.Control type='text' 
-                        placeholder='Domains'
-                        value={domains}
-                        onChange={(e) => setDomains(e.target.value) }/>
-                </Form.Group>
+                    <Form.Group as={Row} className='mb-2'>
+                        <Col sm={{ span: 10, offset: 6 }}>
+                            <Form.Check label='Enabled' 
+                                checked={enabled  ? true : false}
+                                onChange={(e) => setEnabled(() => e.target.checked ? true : false) }
+                            />
+                        </Col>
+                    </Form.Group>
 
-                <Form.Group className='mb-2'>
-                    <Form.Label>IP Ranges:</Form.Label>
-                    <Form.Control type='text' 
-                        placeholder='IP Ranges'
-                        value={IPRanges}
-                        onChange={(e) => setIpRanges(e.target.value) }/>
-                </Form.Group>
-                
-                <Form.Group className='mb-2'>
-                    <Form.Label>Registration number:</Form.Label>
-                    <Form.Control type='text' 
-                        placeholder='Registration number:'
-                        value={regNo}
-                        onChange={(e) => setRegistrationNumber(e.target.value) }/>
-                </Form.Group>
-
-                <Form.Group className='mb-2'>
-                    <Form.Label>Country code:</Form.Label>
-                    <Form.Control type='text' 
-                        placeholder='Country code:'
-                        value={countryCode}
-                        onChange={(e) => setCountryCode(e.target.value) }/>
-                </Form.Group>
-
-                <Form.Group className='mb-2'>
-                    <Form.Label>Language code:</Form.Label>
-                    <Form.Control type='text' 
-                        placeholder='Language code:'
-                        value={languageCode}
-                        onChange={(e) => setLanguageCode(e.target.value) }/>
-                </Form.Group>
-
-                <Form.Group className='mb-2'>
-                    <Form.Label>Description:</Form.Label>
-                    <Form.Control as='textarea' 
-                        placeholder='Description'
-                        value={description}
-                        onChange={(e) => setDescirtpion(e.target.value) }
-                        />
-                </Form.Group>
-
-                <Form.Group className='mb-2'>
-                        <Form.Check label='Enabled' />
-                </Form.Group>
-
-                <Button className='m-1' variant='primary' type='submit'>
-                    Submit
-                </Button>
-                <Button variant='danger' onClick={onCloseClick}>
-                    Cancel
-                </Button>
-            </Form>    
+                    <Modal.Footer>
+                        <Button className='m-1' 
+                            variant='primary' 
+                            type='submit'
+                        >
+                            Submit
+                        </Button>
+                        <Button variant="danger" onClick={onClose}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Form>
+            </Container>
         </Modal>
     )
 }

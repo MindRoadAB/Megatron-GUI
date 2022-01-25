@@ -1,14 +1,9 @@
 import {Table} from 'react-bootstrap'
 import { useTables } from '../../context/TablesContext';
 
-const DataTable = ({dataKey, items, header}) => {
-    const {
-        tables
-    } = useTables();
-
+const DataTable = ({data, items}) => {
     return (
         <div>
-            <h2>{header}</h2>
              <Table striped bordered hover size='sm'>
                 <thead>
                     <tr>
@@ -17,7 +12,7 @@ const DataTable = ({dataKey, items, header}) => {
                 </thead>
                 <tbody>
                    {
-                       tables[dataKey].map(row => 
+                       data.map(row => 
                             <tr>
                                 {items.map(it => <td> {row[it.key]}</td>)}
                             </tr>

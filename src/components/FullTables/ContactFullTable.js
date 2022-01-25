@@ -1,6 +1,22 @@
 import DataTable from "./DataTable";
+import { Form } from 'react-bootstrap';
+import { useTables } from '../../context/TablesContext';
+import { useState } from 'react';
 
 const ContactFullTable = () => {
+    const {
+        tables
+    } = useTables();
+
+    const [searchColumns] = useState(['id', 'org_id', 'first_name', 'last_name', 'email_address']);
+    const[query, setQuery] = useState('');
+
+    const search = (rows) =>{
+        return rows.filter(
+            (row) => 
+                searchColumns.some((column) => row[column]?.toString().toLowerCase().indexOf(query.toLowerCase()) > -1)
+            );
+    }
    
     const items=[
         {
@@ -65,12 +81,21 @@ const ContactFullTable = () => {
         }
     ];
 
-  return (
-        
-        <DataTable dataKey={'contact'}
-            items={items}
-            header={'Contacts Table'}/>
-     )
+    return (
+        <div>
+            <h2> Contact Table </h2>
+            <Form.Control
+                    className='mb-3'
+                    type="text"
+                    placeholder='Search...'
+                    value={query} 
+                    onChange={(e) => setQuery(e.target.value)}
+            />
+            <DataTable data={search(tables['contact'])}
+                items={items}
+            />
+        </div>
+    )
 };
 
 export default ContactFullTable;

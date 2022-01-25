@@ -109,7 +109,7 @@ const Organizations = () => {
     const search = (rows) =>{
         return rows.filter(
             (row) => 
-                searchColumns.some((column) => row[column].toString().toLowerCase().indexOf(query.toLowerCase()) > -1)
+                searchColumns.some((column) => row[column]?.toString().toLowerCase().indexOf(query.toLowerCase()) > -1)
             );
     }
 

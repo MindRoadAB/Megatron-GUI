@@ -1,6 +1,23 @@
 import DataTable from '../FullTables/DataTable'
+import { Form } from 'react-bootstrap';
+import { useTables } from '../../context/TablesContext';
+import { useState } from 'react';
 
 const IpRangeFullTable = () => {
+    const {
+        tables
+    } = useTables();
+
+    const [searchColumns] = useState(['id', 'org_id', 'start_address', 'end_address', 'net_name']);
+    const[query, setQuery] = useState('');
+
+    const search = (rows) =>{
+        return rows.filter(
+            (row) => 
+                searchColumns.some((column) => row[column]?.toString().toLowerCase().indexOf(query.toLowerCase()) > -1)
+            );
+    }
+   
     const items=[
         {
             label: 'Id',
@@ -24,9 +41,19 @@ const IpRangeFullTable = () => {
         }
     ];
     return (
-        <DataTable dataKey={'ip_range'}
-            items={items}
-            header={'IP Range Table'}/>
+        <div>
+            <h2> IP Range Table </h2>
+            <Form.Control
+                    className='mb-3'
+                    type="text"
+                    placeholder='Search...'
+                    value={query} 
+                    onChange={(e) => setQuery(e.target.value)}
+            />
+            <DataTable data={search(tables['ip_range'])}
+                items={items}
+            />
+        </div>
     )
 };
 

@@ -24,7 +24,7 @@ const Organizations = () => {
     useEffect(() => {
         const getOrganizations = async () =>{
             const organizations = await fetchOrganizations();
-            setData(organizations);
+            setData((organizations).sort((a,b) => a.id - b.id));
         };
         getOrganizations();
     

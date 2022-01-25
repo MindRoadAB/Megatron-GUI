@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {useAlerts} from "./AlertContext";
 
 const OrganizationContext = React.createContext(null);
 
@@ -8,16 +9,22 @@ const deepClone = (object) => JSON.parse(JSON.stringify(object));
 
 const OrganizationDetailContext = ({orgId, children}) => {
 
+    const { triggerAlert } = useAlerts();
+
     const [organization, setOrganization] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await fetch('/api/organization/' + orgId);
+                if (!response.ok) {
+                    let responseText = await response.text();
+                    throw responseText;
+                }
                 const fetchedOrg = await response.json();
                 setOrganization(fetchedOrg);
             } catch (error) {
-                alert("Failed to fetch organization data");
+                triggerAlert("Failed to fetch organization data", error);
             }
         }
         fetchData();
@@ -32,7 +39,8 @@ const OrganizationDetailContext = ({orgId, children}) => {
             body: JSON.stringify(newOrganization)
         });
         if (!postResponse.ok) {
-            throw postResponse.statusText;
+            let responseText = await postResponse.text();
+            throw responseText;
         }
         return await postResponse.json();
     }
@@ -52,7 +60,7 @@ const OrganizationDetailContext = ({orgId, children}) => {
             const syncedOrganization = await syncWithDb(newOrganization);
             setOrganization(syncedOrganization);
         } catch (error) {
-            alert("Database update failed");
+            triggerAlert("Database update failed", error);
         }
     }
 
@@ -62,8 +70,8 @@ const OrganizationDetailContext = ({orgId, children}) => {
             newOrganization[dataKey] = newOrganization[dataKey].filter(it => it.id !== deleteItem.id);
             const syncedOrganization = await syncWithDb(newOrganization);
             setOrganization(syncedOrganization);
-        } catch (e) {
-            alert("Database delete failed");
+        } catch (error) {
+            triggerAlert("Database delete failed", error);
         }
     }
 

@@ -1,5 +1,5 @@
-import {Table} from 'react-bootstrap'
-import { useTables } from '../../context/TablesContext';
+import {Table, Button} from 'react-bootstrap'
+import {Link} from 'react-router-dom'
 
 const DataTable = ({data, items}) => {
     return (
@@ -8,6 +8,7 @@ const DataTable = ({data, items}) => {
                 <thead>
                     <tr>
                         {items.map(it => <th key={it.key}>{it.label}</th>)}
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -15,6 +16,15 @@ const DataTable = ({data, items}) => {
                        data.map(row => 
                             <tr>
                                 {items.map(it => <td> {row[it.key]}</td>)}
+                                <td>
+                                    <Button className={'m-1 float-end'}
+                                        as={Link} 
+                                        to={'/organization/' + row.org_id}  
+                                        variant='secondary'
+                                    >
+                                        View
+                                    </Button>
+                                </td>
                             </tr>
                         )
                    }

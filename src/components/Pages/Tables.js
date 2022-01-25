@@ -1,9 +1,13 @@
 import React from "react";
 import{Container} from 'react-bootstrap'
+import ASNFullTable from "../FullTables/ASNFullTable";
+import ContactFullTable from "../FullTables/ContactFullTable";
 import {
     TablesContext,
     useTables
 } from "../../context/TablesContext";
+import IpRangeFullTable from "../FullTables/IpRangeFullTable";
+import DomainNameFullTable from '../FullTables/DomainNameFullTable';
 
 
 const VPadding = () => <div style={{marginTop: "3rem"}} />;
@@ -17,14 +21,21 @@ const TablesInfo = () => {
 
 const Tables = () => {
   return (
-        <div>
-            <TablesContext>
-                <Container>
-                    <VPadding />
-                    <TablesInfo />
-                </Container>
-            </TablesContext>
-        </div>
+        <TablesContext>
+            <Container>
+                <VPadding />
+                <TablesInfo />
+                <VPadding />
+                <ContactFullTable />
+                <VPadding />
+                <ASNFullTable />
+                <VPadding />
+                <IpRangeFullTable />
+                <VPadding />
+                <DomainNameFullTable />
+                
+            </Container>
+        </TablesContext>
     )
 };
 

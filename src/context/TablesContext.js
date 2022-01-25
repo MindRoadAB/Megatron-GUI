@@ -5,40 +5,32 @@ const DataContext = React.createContext(null);
 const useTables = () => React.useContext(DataContext);
 
 const TablesContext = ({children}) => {
-    const [tables, setTables] = useState([]);
+    const [tables, setTables] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const getData = async () => {
             let data = [];
-            try {
-                const asnRes = await fetch('/api/table/asn');
-                const fetchedAsn = await asnRes.json();
-                data['asn'] = fetchedAsn;
-            } catch (error) {
-                alert("Failed to fetch ASN data");
-            }
+            
+            data['asn'] = await fetchData('asn');
+            data['domain_name'] = await fetchData('domain_name');
+            data['ip_range'] = await fetchData('ip_range');
+            data['contact'] = await fetchData('contact');
 
-            try {
-                const domainsRes = await fetch('/api/table/domain_names');
-                const fetchedDomains = await domainsRes.json();
-                data['domain_names'] = fetchedDomains;
-            } catch (error) {
-                alert("Failed to fetch Domain names data");
-            }
-
-            try {
-                const ipRes = await fetch('/api/table/ip_range');
-                const fetchedIps = await ipRes.json();
-                data['ip_range'] = fetchedIps;
-                
-            } catch (error) {
-                alert("Failed to fetch IP ranges data");
-            }
             setTables(data);
-
         }
-        fetchData();
+
+        getData();
     }, []);
+
+    const fetchData = async (table) => {
+        try {
+            const res = await fetch('/api/table/' + table);
+            const data = await res.json();
+            return data;
+        } catch (error) {
+            alert('Failed to fetch ' + table + ' data');
+        }
+    }
 
     if (tables !== null) {
         return (

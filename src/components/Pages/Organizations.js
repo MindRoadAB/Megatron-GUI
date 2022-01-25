@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import OrganizationTable from '../OrganizationTable';
+import OrganizationTable from '../FullTables/OrganizationTable';
 import EditModal from '../EditModal'
 import {Button, Form, Container} from 'react-bootstrap';
 import { CSVLink } from 'react-csv';

@@ -3,20 +3,13 @@ import { Form } from 'react-bootstrap';
 import { useTables } from '../../context/TablesContext';
 import { useState } from 'react';
 
-const DomainNameFullTable = () => {
+const DomainNameFullTable = ({searchFunction}) => {
     const {
         tables
     } = useTables();
 
     const [searchColumns] = useState(['id', 'org_id', 'domain_name']);
     const[query, setQuery] = useState('');
-
-    const search = (rows) =>{
-        return rows.filter(
-            (row) => 
-                searchColumns.some((column) => row[column]?.toString().toLowerCase().indexOf(query.toLowerCase()) > -1)
-            );
-    }
    
     const items=[
         {
@@ -42,7 +35,7 @@ const DomainNameFullTable = () => {
                     value={query} 
                     onChange={(e) => setQuery(e.target.value)}
             />
-            <DataTable data={search(tables['domain_name'])}
+            <DataTable data={searchFunction(tables['domain_name'], searchColumns, query)}
                 items={items}
             />
         </div>

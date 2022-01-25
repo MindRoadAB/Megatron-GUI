@@ -3,7 +3,7 @@ import { Form } from 'react-bootstrap';
 import { useTables } from '../../context/TablesContext';
 import { useState } from 'react';
 
-const ContactFullTable = () => {
+const ContactFullTable = ({searchFunction}) => {
     const {
         tables
     } = useTables();
@@ -11,13 +11,6 @@ const ContactFullTable = () => {
     const [searchColumns] = useState(['id', 'org_id', 'first_name', 'last_name', 'email_address']);
     const[query, setQuery] = useState('');
 
-    const search = (rows) =>{
-        return rows.filter(
-            (row) => 
-                searchColumns.some((column) => row[column]?.toString().toLowerCase().indexOf(query.toLowerCase()) > -1)
-            );
-    }
-   
     const items=[
         {
             label: 'Id',
@@ -91,7 +84,7 @@ const ContactFullTable = () => {
                     value={query} 
                     onChange={(e) => setQuery(e.target.value)}
             />
-            <DataTable data={search(tables['contact'])}
+            <DataTable data={searchFunction(tables['contact'], searchColumns, query)}
                 items={items}
             />
         </div>

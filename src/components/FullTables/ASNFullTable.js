@@ -5,16 +5,11 @@ import { useState } from 'react';
 
 
 
-const ASNFullTable = () => {
+const ASNFullTable = ({searchFunction}) => {
     const [searchColumns] = useState(['id', 'org_id', 'asn']);
     const[query, setQuery] = useState('');
 
-    const search = (rows) =>{
-        return rows.filter(
-            (row) => 
-                searchColumns.some((column) => row[column]?.toString().toLowerCase().indexOf(query.toLowerCase()) > -1)
-            );
-    }
+    
 
     const {
         tables
@@ -44,7 +39,7 @@ const ASNFullTable = () => {
                     value={query} 
                     onChange={(e) => setQuery(e.target.value)}
             />
-            <DataTable data={search(tables['asn'])}
+            <DataTable data={searchFunction(tables['asn'], searchColumns, query)}
                 items={items}
             />
         </div>

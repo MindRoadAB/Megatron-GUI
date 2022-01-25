@@ -3,20 +3,13 @@ import { Form } from 'react-bootstrap';
 import { useTables } from '../../context/TablesContext';
 import { useState } from 'react';
 
-const IpRangeFullTable = () => {
+const IpRangeFullTable = ({searchFunction}) => {
     const {
         tables
     } = useTables();
 
     const [searchColumns] = useState(['id', 'org_id', 'start_address', 'end_address', 'net_name']);
     const[query, setQuery] = useState('');
-
-    const search = (rows) =>{
-        return rows.filter(
-            (row) => 
-                searchColumns.some((column) => row[column]?.toString().toLowerCase().indexOf(query.toLowerCase()) > -1)
-            );
-    }
    
     const items=[
         {
@@ -50,7 +43,7 @@ const IpRangeFullTable = () => {
                     value={query} 
                     onChange={(e) => setQuery(e.target.value)}
             />
-            <DataTable data={search(tables['ip_range'])}
+            <DataTable data={searchFunction(tables['ip_range'], searchColumns, query)}
                 items={items}
             />
         </div>

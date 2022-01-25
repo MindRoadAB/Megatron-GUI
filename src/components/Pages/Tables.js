@@ -9,6 +9,13 @@ import {
 import IpRangeFullTable from "../FullTables/IpRangeFullTable";
 import DomainNameFullTable from '../FullTables/DomainNameFullTable';
 
+const search = (rows, searchColumns, query) =>{
+    return rows.filter(
+        (row) => 
+            searchColumns.some((column) => row[column]?.toString().toLowerCase().indexOf(query.toLowerCase()) > -1)
+        );
+}
+
 
 const VPadding = () => <div style={{marginTop: "3rem"}} />;
 
@@ -26,13 +33,13 @@ const Tables = () => {
                 <VPadding />
                 <TablesInfo />
                 <VPadding />
-                <ContactFullTable />
+                <ContactFullTable searchFunction={search} />
                 <VPadding />
-                <ASNFullTable />
+                <ASNFullTable searchFunction={search} />
                 <VPadding />
-                <IpRangeFullTable />
+                <IpRangeFullTable searchFunction={search} />
                 <VPadding />
-                <DomainNameFullTable />
+                <DomainNameFullTable searchFunction={search} />
                 
             </Container>
         </TablesContext>

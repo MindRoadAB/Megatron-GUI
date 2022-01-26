@@ -37,6 +37,7 @@ const DomainNameFullTable = ({searchFunction}) => {
             />
             <DataTable data={searchFunction(tables['domain_name'], searchColumns, query)}
                 items={items}
+                name={'domain_name'}
             />
         </div>
     )

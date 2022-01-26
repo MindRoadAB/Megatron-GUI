@@ -3,6 +3,7 @@ import OrganizationTable from '../FullTables/OrganizationTable';
 import EditModal from '../EditModal'
 import {Button, Form, Container} from 'react-bootstrap';
 import { CSVLink } from 'react-csv';
+import ExportTableButton from '../ExportTableButton';
 
 const Organizations = () => {     
     const [showAddOrg, setShowAddOrg] = useState(false);
@@ -148,13 +149,9 @@ const Organizations = () => {
                     edit={updateOrganization}/>
            </div>
             <div>
-                <CSVLink data={search(data)}
-                    filename={'organizations.csv'}
-                    className='btn btn-secondary mt-2'
-                    target='_blank'
-                >
-                    Export table
-                </CSVLink>
+                <ExportTableButton data={search(data)}
+                    name={'organizations'}
+                />
             </div>
        </Container>
     )

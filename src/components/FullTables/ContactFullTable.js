@@ -86,6 +86,7 @@ const ContactFullTable = ({searchFunction}) => {
             />
             <DataTable data={searchFunction(tables['contact'], searchColumns, query)}
                 items={items}
+                name={'contact'}
             />
         </div>
     )

@@ -1,7 +1,8 @@
 import {Table, Button} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
+import ExportTableButton from '../ExportTableButton';
 
-const DataTable = ({data, items}) => {
+const DataTable = ({data, items, name}) => {
     return (
         <div>
              <Table striped bordered hover size='sm'>
@@ -30,6 +31,7 @@ const DataTable = ({data, items}) => {
                    }
                 </tbody>
             </Table>
+                <ExportTableButton data={data} name={name} />
         </div>
     )
 };

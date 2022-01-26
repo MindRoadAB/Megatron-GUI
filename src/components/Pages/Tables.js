@@ -20,8 +20,7 @@ const search = (rows, searchColumns, query) =>{
 const VPadding = () => <div style={{marginTop: "3rem"}} />;
 
 const TablesInfo = () => {
-    const { tables } = useTables();
-    console.log(tables);                                                                        
+    const { tables } = useTables();                                                          
     return <h1>All of the data</h1>;
 }
 

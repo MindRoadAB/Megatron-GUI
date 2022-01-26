@@ -45,6 +45,7 @@ const IpRangeFullTable = ({searchFunction}) => {
             />
             <DataTable data={searchFunction(tables['ip_range'], searchColumns, query)}
                 items={items}
+                name={'ip_range'}
             />
         </div>
     )

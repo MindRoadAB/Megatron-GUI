@@ -1,7 +1,7 @@
 import {Table, Button, ButtonGroup, Modal, Row, Col} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import {useOrganization} from "../../context/OrganizationDetailContext";
-import { CSVLink } from 'react-csv';
+import ExportTableButton from '../ExportTableButton';
 
 const DataHeaders = ({items}) =>
     <thead>
@@ -134,18 +134,6 @@ const NewItemButton = ({onClick}) =>
     >
         Add
     </Button>;
-
-const ExportTableButton = ({data, name}) =>
-    <CSVLink data={data}
-        filename={name + '_table.csv'}
-        className='btn btn-secondary m-1'
-        target='_blank'
-
-    >
-        Export table
-    </CSVLink>
-
-
 
 
 const DetailedTable = ({header, dataKey, items, defaultObject={}, addTimestamps=false}) => {

@@ -9,7 +9,6 @@ const ASNFullTable = ({searchFunction}) => {
     const [searchColumns] = useState(['id', 'org_id', 'asn']);
     const[query, setQuery] = useState('');
 
-    
 
     const {
         tables
@@ -41,6 +40,7 @@ const ASNFullTable = ({searchFunction}) => {
             />
             <DataTable data={searchFunction(tables['asn'], searchColumns, query)}
                 items={items}
+                name={'asn'}
             />
         </div>
     )

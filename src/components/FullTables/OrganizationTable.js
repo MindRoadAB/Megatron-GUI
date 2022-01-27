@@ -1,8 +1,8 @@
 import {Table, Button, ButtonGroup } from "react-bootstrap"
 import {Link} from 'react-router-dom'
-import DeletionModal from "./DeletionModal"
+import DeletionModal from "../DeletionModal"
 import { useState } from "react"
-import EditModal from "./EditModal"
+import EditModal from "../EditModal"
 
 const OrganizationTable = ({data, remove, edit}) => {
 
@@ -26,6 +26,7 @@ const OrganizationTable = ({data, remove, edit}) => {
                         <th key={'id'}>Id</th>
                         <th key={'name'}>Name</th>
                         <th key={'desc'}>Description</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>

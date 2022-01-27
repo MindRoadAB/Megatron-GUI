@@ -15,6 +15,7 @@ const VPadding = () => <div style={{marginTop: "3rem"}} />;
 
 const OrganizationInfo = () => {
     const { organization } = useOrganization();
+    console.log(organization)
     return <h1>{organization.organization.name}</h1>;
 }
 

@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react';
-import OrganizationTable from '../OrganizationTable';
+import OrganizationTable from '../FullTables/OrganizationTable';
 import EditModal from '../EditModal'
 import {Button, Form, Container} from 'react-bootstrap';
-import { CSVLink } from 'react-csv';
+import ExportTableButton from '../ExportTableButton';
 
 const Organizations = () => {     
     const [showAddOrg, setShowAddOrg] = useState(false);
@@ -24,22 +24,19 @@ const Organizations = () => {
     useEffect(() => {
         const getOrganizations = async () =>{
             const organizations = await fetchOrganizations();
-            setData(organizations);
+            setData((organizations).sort((a,b) => a.id - b.id));
         };
         getOrganizations();
     
     }, []); 
 
     
-    // API call to fetch the orgs, maybe should be in different file?
     const fetchOrganizations = async () =>{
         const res = await fetch('/api/organization');
         const data = await res.json();
         return data;
     }
 
-
-    // API call to add an org, maybe should be in different file?
     const addOrganization = async (org) => {
         try{
             const res = await fetch('/api/organization',
@@ -104,12 +101,11 @@ const Organizations = () => {
         }
     }
 
-
     // Filter the data based on if the columns match the input from the text box (query)
     const search = (rows) =>{
         return rows.filter(
             (row) => 
-                searchColumns.some((column) => row[column].toString().toLowerCase().indexOf(query.toLowerCase()) > -1)
+                searchColumns.some((column) => row[column]?.toString().toLowerCase().indexOf(query.toLowerCase()) > -1)
             );
     }
 
@@ -148,13 +144,9 @@ const Organizations = () => {
                     edit={updateOrganization}/>
            </div>
             <div>
-                <CSVLink data={search(data)}
-                    filename={'organizations.csv'}
-                    className='btn btn-secondary mt-2'
-                    target='_blank'
-                >
-                    Export table
-                </CSVLink>
+                <ExportTableButton data={search(data)}
+                    name={'organizations'}
+                />
             </div>
        </Container>
     )

@@ -1,4 +1,4 @@
-import DataTable from '../FullTables/DataTable'
+import DataTable from './DataTable'
 import { Form } from 'react-bootstrap';
 import { useTables } from '../../context/TablesContext';
 import { useState } from 'react';

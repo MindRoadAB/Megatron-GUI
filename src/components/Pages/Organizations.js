@@ -2,7 +2,6 @@ import {useState, useEffect} from 'react';
 import OrganizationTable from '../FullTables/OrganizationTable';
 import EditModal from '../EditModal'
 import {Button, Form, Container} from 'react-bootstrap';
-import { CSVLink } from 'react-csv';
 import ExportTableButton from '../ExportTableButton';
 
 const Organizations = () => {     
@@ -32,15 +31,12 @@ const Organizations = () => {
     }, []); 
 
     
-    // API call to fetch the orgs, maybe should be in different file?
     const fetchOrganizations = async () =>{
         const res = await fetch('/api/organization');
         const data = await res.json();
         return data;
     }
 
-
-    // API call to add an org, maybe should be in different file?
     const addOrganization = async (org) => {
         try{
             const res = await fetch('/api/organization',
@@ -104,7 +100,6 @@ const Organizations = () => {
             alert('Could not delete organization');
         }
     }
-
 
     // Filter the data based on if the columns match the input from the text box (query)
     const search = (rows) =>{

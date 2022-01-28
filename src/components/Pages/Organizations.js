@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import OrganizationTable from '../FullTables/OrganizationTable';
-import EditModal from '../EditModal'
+import EditModal from '../Modals/git aEditModal'
 import {Button, Form, Container} from 'react-bootstrap';
 import ExportTableButton from '../ExportTableButton';
 

@@ -1,8 +1,8 @@
 import {Table, Button, ButtonGroup } from "react-bootstrap"
 import {Link} from 'react-router-dom'
-import DeletionModal from "../DeletionModal"
+import DeletionModal from "../Modals/DeletionModal"
 import { useState } from "react"
-import EditModal from "../EditModal"
+import EditModal from "../Modals/EditModal"
 
 const OrganizationTable = ({data, remove, edit}) => {
 

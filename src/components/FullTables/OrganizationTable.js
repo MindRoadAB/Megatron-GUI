@@ -6,13 +6,13 @@ import EditModal from "../EditModal"
 
 const OrganizationTable = ({data, remove, edit}) => {
 
-    const [showDeleteOrg, setShow] = useState(false);
+    const [showDeleteOrg, setShowDeleteOrg] = useState(false);
     const [showEditOrg, setShowEditOrg] = useState(false);
 
     const [org, setOrg] = useState(null);
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleCloseDeleteOrg = () => setShowDeleteOrg(false);
+    const handleShowDeleteOrg = () => setShowDeleteOrg(true);
 
     const handleCloseEditOrg = () => setShowEditOrg(false);
     const handleShowEditOrg = () => setShowEditOrg(true);
@@ -57,7 +57,7 @@ const OrganizationTable = ({data, remove, edit}) => {
                                         <Button
                                             className='m-1' 
                                             variant='danger'
-                                            onClick={() => {setOrg(row); handleShow()}}
+                                            onClick={() => {setOrg(row); handleShowDeleteOrg()}}
                                         >
                                             Delete
                                         </Button>
@@ -69,9 +69,11 @@ const OrganizationTable = ({data, remove, edit}) => {
             </Table>
 
             {showDeleteOrg &&
-            <DeletionModal onCloseClick={() => handleClose()} 
-                orgToDelete={org}
-                onDelete={remove}/>}
+                <DeletionModal visible={showDeleteOrg}
+                    onClose={handleCloseDeleteOrg} 
+                    orgToDelete={org}
+                    onDelete={remove}/>}
+
             {showEditOrg && 
                 <EditModal visible={showEditOrg} 
                     onEditSubmit={edit}

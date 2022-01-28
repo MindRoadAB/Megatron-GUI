@@ -13,6 +13,7 @@ const EditModal = ({visible, onEditSubmit, onClose, edit, orgToEdit={}}) => {
     const [language_code, setLanguageCode] = useState(edit? orgToEdit.language_code : 'sv');
     const [description, setDescirtpion] = useState(edit? orgToEdit.description : '');
     const [enabled, setEnabled] = useState(edit? orgToEdit.enabled : false);
+    const [created, setCreated] = useState(edit? orgToEdit.created : '');
 
     const [header] = useState(edit? 'Edit ' + orgToEdit.name : 'Add organization');
 
@@ -42,16 +43,21 @@ const EditModal = ({visible, onEditSubmit, onClose, edit, orgToEdit={}}) => {
         const date = new Date();
         const timestamp = date.getTime() / 1000;
 
-        const created = timestamp;
-        const last_modified = timestamp;
         const modified_by = 'GUI';
+        const last_modified = timestamp;
+        
         let comment;
 
-        if(edit)
+        if(edit){
             comment = '[1 ' + date.toISOString().split('.')[0] + '] Edited.';
-        else
+        }
+        else{
             comment = '[1 ' + date.toISOString().split('.')[0] + '] Created.';
+            setCreated(timestamp);
+        }
 
+        console.log(timestamp)
+    
         if(!name){
             alert('Please add a name to the organization');
             return;
@@ -64,7 +70,7 @@ const EditModal = ({visible, onEditSubmit, onClose, edit, orgToEdit={}}) => {
         onEditSubmit({auto_update_match_fields, name, registration_no, prio_id, country_code, 
             language_code, description, enabled, created, last_modified, modified_by, comment}, id);
         clearForm();
-        onClose();
+        onClose();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
     }
 
     const clearForm = () =>{

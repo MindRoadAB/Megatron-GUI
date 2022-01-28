@@ -4,6 +4,12 @@ import DeletionModal from "../Modals/DeletionModal"
 import { useState } from "react"
 import EditModal from "../Modals/EditModal"
 
+const formatTimestamp = (stamp) => {
+    const d = new Date(stamp * 1e3).toLocaleString();
+    return d;
+}
+
+
 const OrganizationTable = ({data, remove, edit}) => {
     const prios =  [
         {value: 2, text: 'Organization Category 1 [95]'},
@@ -42,6 +48,10 @@ const OrganizationTable = ({data, remove, edit}) => {
                         <th key={'name'}>Name</th>
                         <th key={'prio'}>Prio</th>
                         <th key={'desc'}>Description</th>
+                        <th key={'count_code'}>Country Code</th>
+                        <th key={'lang_code'}>Lagnuage Code</th>
+                        <th key={'created'}>Created</th>
+                        <th key={'last_modified'}>Last Modified</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -51,8 +61,12 @@ const OrganizationTable = ({data, remove, edit}) => {
                             <tr key={'content_'+ row.id}>
                                 <td key={'id_'+ row.id}>{row.id}</td> 
                                 <td key={'name_'+ row.name}>{row.name}</td>
-                                <td key={'prio_' + row.id }>{prios[row.prio_id].text}</td>
+                                <td key={'prio_' + row.id }>{prios.map((p) => row.prio_id === p.value? p.text : '')}</td>
                                 <td key={'desc_'+ row.description}>{row.description}</td>
+                                <td key={'count_code_'+ row.id}>{row.country_code}</td>
+                                <td key={'lang_code_'+ row.id}>{row.language_code}</td>
+                                <td key={'created_'+ row.id}>{formatTimestamp(row.created)}</td>
+                                <td key={'last_modified'+ row.id}>{formatTimestamp(row.last_modified)}</td>
                                 <td key={'btn_' + row.id }>
                                     <ButtonGroup className='float-end' >
                                         <Button as={Link} 
@@ -101,10 +115,7 @@ const OrganizationTable = ({data, remove, edit}) => {
             }
 
         </div>
-
-        
     )
 }
-
 
 export default OrganizationTable

@@ -30,7 +30,9 @@ const Organizations = () => {
     
     }, []); 
 
-    
+    //
+    // API Calls, maybe should be context only
+    //
     const fetchOrganizations = async () =>{
         const res = await fetch('/api/organization');
         const data = await res.json();

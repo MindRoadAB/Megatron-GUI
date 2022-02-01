@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import OrganizationTable from '../FullTables/OrganizationTable';
-import EditModal from '../EditModal'
+import EditModal from '../Modals/EditModal'
 import {Button, Form, Container} from 'react-bootstrap';
 import ExportTableButton from '../ExportTableButton';
 
@@ -10,14 +10,10 @@ const Organizations = () => {
     const handleClose = () => setShowAddOrg(false);
     const handleShow = () => setShowAddOrg(true);
 
-    // Sets the default data state and then calls setData when we change it
     const [data, setData] = useState([]);
 
-    // Sets the default query state and changes it when we type in the search box
     const[query, setQuery] = useState('');
 
-    // Sets what is searched for by default, id and name 
-    // Is then changed when the checkboxes change
     const [searchColumns] = useState(['id', 'name']);
 
     // Gets the data when page is loaded and sets the data state
@@ -30,7 +26,9 @@ const Organizations = () => {
     
     }, []); 
 
-    
+    //
+    // API Calls, maybe should be context only
+    //
     const fetchOrganizations = async () =>{
         const res = await fetch('/api/organization');
         const data = await res.json();
